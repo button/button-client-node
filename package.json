@@ -1,0 +1,25 @@
+{
+  "name": "button-client-node",
+  "version": "1.0.0",
+  "description": "node.js client for the Button Order API",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint --ext .js lib test",
+    "coverage": "NODE_PATH=./ istanbul cover node_modules/.bin/_mocha -- 'test/**/*.js'; open coverage/lcov-report/index.html",
+    "test": "NODE_PATH=./ mocha --recursive test && npm run lint"
+  },
+  "author": "Button",
+  "license": "MIT",
+  "devDependencies": {
+    "bluebird": "^3.4.1",
+    "eslint": "^2.13.1",
+    "expect.js": "^0.3.1",
+    "istanbul": "^0.4.4",
+    "mocha": "^3.0.0",
+    "nock": "^8.0.0",
+    "q": "^1.4.1"
+  },
+  "engines": {
+    "node": ">=0.10"
+  }
+}
