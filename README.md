@@ -1,4 +1,4 @@
-# button-client-node [![Build Status](https://travis-ci.com/button/button-client-node.svg?token=HswVzGqEpwteP838Y3ss&branch=master)](https://travis-ci.com/button/button-client-node)
+# button-client-node [![Build Status](https://travis-ci.org/button/button-client-node.svg?branch=master)](https://travis-ci.com/button/button-client-node)
 
 This module is a thin client for interacting with Button's API.
 
@@ -13,6 +13,10 @@ Please see the full [API Docs](https://www.usebutton.com/developers/api-referenc
 *  None
 
 ## Usage
+
+```bash
+npm install button-client-node
+```
 
 To create a client capable of making network requests, invoke `button-client-node` with your [API key](https://app.usebutton.com/settings/organization). 
 
