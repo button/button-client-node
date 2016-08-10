@@ -150,3 +150,9 @@ client.orders.del('btnorder-XXX', function(err, res) {
   // ...
 });
 ```
+
+## Contributing
+
+* Installing development dependencies: `npm install`
+* Running tests: `npm test`
+* Running lint: `npm run lint`
