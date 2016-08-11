@@ -27,7 +27,7 @@ module.exports = function client(apiKey, config) {
     auth: apiKey + ':',
     headers: {
       'Content-Type': 'application/json',
-      'User-Agent': 'button-client-node/' + version + ' Node/' + process.versions.node
+      'User-Agent': 'button-client-node/' + version + ' node/' + process.versions.node
     }
   };
 
