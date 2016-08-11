@@ -133,10 +133,7 @@ client.orders.get('btnorder-XXX', function(err, res) {
 ```javascript
 var client = require('./index')('sk-XXX');
 
-client.orders.update('btnorder-XXX', {
-  id: '1989',
-  total: 60
-}, function(err, res) {
+client.orders.update('btnorder-XXX', { total: 60 }, function(err, res) {
   // ...
 });
 ```
