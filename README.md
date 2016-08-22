@@ -99,7 +99,7 @@ The returned promise will either reject with an `Error` or resolve with the API 
 
 ## Resources
 
-We currently expose only one resource to manage, `Orders`. 
+We currently expose two resource to manage, `Orders` and `Accounts`. 
 
 ### Orders
 
@@ -128,6 +128,7 @@ client.orders.get('btnorder-XXX', function(err, res) {
   // ...
 });
 ```
+
 ##### Update
 
 ```javascript
@@ -145,6 +146,28 @@ var client = require('./index')('sk-XXX');
 
 client.orders.del('btnorder-XXX', function(err, res) {
   // ...
+});
+```
+
+### Accounts
+
+##### all
+
+```javascript
+var client = require('./index')('sk-XXX');
+
+client.accounts.all(function(err, res) {
+    // ...
+});
+```
+
+##### transactions
+
+```javascript
+var client = require('./index')('sk-XXX');
+
+client.accounts.transactions('acc-1', function(err, res) {
+    // ...
 });
 ```
 

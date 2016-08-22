@@ -4,24 +4,19 @@ var expect = require('expect.js');
 var nock = require('nock');
 var Q = require('q');
 
-var orders = require('lib').resources.orders;
+var client = require('../../../index');
 
 describe('lib/resources/orders', function() {
 
   before(function() {
     nock.disableNetConnect();
-    var options = {
-      hostname: 'api.usebutton.com',
-      auth: 'sk-XXX:',
-      headers: { 'Content-Type': 'application/json' }
-    };
 
     var config = {
       promise: function(resolver) { return Q.Promise(resolver); }
     };
 
-    this.callbackClient = orders(options, {});
-    this.promiseClient = orders(options, config);
+    this.callbackClient = client('sk-XXX').orders;
+    this.promiseClient = client('sk-XXX', config).orders;
   });
 
   after(function() {
