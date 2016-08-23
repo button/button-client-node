@@ -1,6 +1,6 @@
 {
   "name": "button-client-node",
-  "version": "1.1.0",
+  "version": "2.0.0",
   "description": "node.js client for the Button Order API",
   "main": "index.js",
   "scripts": {

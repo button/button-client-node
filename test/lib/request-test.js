@@ -14,7 +14,11 @@ function errorResponse(message) {
 
 function successResponse(obj) {
   return {
-    meta: { status: 'ok' },
+    meta: {
+      status: 'ok',
+      next: 'https://api.usebutton.com/api?cursor=1%3A',
+      previous: 'https://api.usebutton.com/api?cursor=3%3A'
+    },
     object: obj
   };
 }
@@ -53,7 +57,8 @@ describe('lib/#request', function() {
       headers: { 'Content-Type': contentType }
     }, function(err, res) {
       expect(err).to.be(null);
-      expect(res).to.eql(payload);
+      expect(res.data).to.eql(payload);
+      expect(res.meta).to.eql({ next: '1:', previous: '3:' });
       scope.done();
       done();
     });
@@ -80,7 +85,7 @@ describe('lib/#request', function() {
       headers: { 'Content-Type': contentType }
     }, postData, function(err, res) {
       expect(err).to.be(null);
-      expect(res).to.eql(payload);
+      expect(res.data).to.eql(payload);
       scope.done();
       done();
     });
@@ -106,7 +111,7 @@ describe('lib/#request', function() {
       headers: { 'Content-Type': contentType }
     }, function(err, res) {
       expect(err).to.be(null);
-      expect(res).to.eql(payload);
+      expect(res.data).to.eql(payload);
       scope.done();
       done();
     });
@@ -194,7 +199,7 @@ describe('lib/#request', function() {
       hostname: hostname
     }, function(err, res) {
       expect(err).to.be(null);
-      expect(res).to.eql(payload);
+      expect(res.data).to.eql(payload);
       scope.done();
       done();
     });

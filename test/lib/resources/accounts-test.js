@@ -35,7 +35,7 @@ describe('lib/resources/accounts', function() {
     it('gets a list of accounts with a callback', function(done) {
       this.callbackClient.all(function(err, res) {
         expect(err).to.be(null);
-        expect(res).to.eql(this.accounts);
+        expect(res.data).to.eql(this.accounts);
         this.scope.done();
         done();
       }.bind(this));
@@ -43,7 +43,7 @@ describe('lib/resources/accounts', function() {
 
     it('gets a list of accounts with a promise', function(done) {
       this.promiseClient.all().then(function(result) {
-        expect(result).to.eql(this.accounts);
+        expect(result.data).to.eql(this.accounts);
         this.scope.done();
         done();
       }.bind(this)).catch(done);
@@ -59,25 +59,59 @@ describe('lib/resources/accounts', function() {
         { id: 'tx-1' },
         { id: 'tx-2' }
       ];
-
-      this.scope = nock('https://api.usebutton.com:443')
-        .get('/v1/affiliation/accounts/' + this.accountId + '/transactions')
-        .reply(200, { meta: { status: 'ok' }, 'objects': this.transactions });
     });
 
     it('gets a list of transactions with a callback', function(done) {
+      var scope = nock('https://api.usebutton.com:443')
+        .get('/v1/affiliation/accounts/' + this.accountId + '/transactions')
+        .reply(200, { meta: { status: 'ok' }, 'objects': this.transactions });
+
       this.callbackClient.transactions(this.accountId, function(err, res) {
         expect(err).to.be(null);
-        expect(res).to.eql(this.transactions);
-        this.scope.done();
+        expect(res.data).to.eql(this.transactions);
+        scope.done();
         done();
       }.bind(this));
     });
 
     it('gets a list of transactions with a promise', function(done) {
+      var scope = nock('https://api.usebutton.com:443')
+        .get('/v1/affiliation/accounts/' + this.accountId + '/transactions')
+        .reply(200, { meta: { status: 'ok' }, 'objects': this.transactions });
+
       this.promiseClient.transactions(this.accountId).then(function(result) {
-        expect(result).to.eql(this.transactions);
-        this.scope.done();
+        expect(result.data).to.eql(this.transactions);
+        scope.done();
+        done();
+      }.bind(this)).catch(done);
+    });
+
+    it('accepts an options object', function(done) {
+      var scope = nock('https://api.usebutton.com:443')
+        .get('/v1/affiliation/accounts/' + this.accountId + '/transactions?cursor=cursor&start=2015-01-01T00%3A00%3A00Z&end=2016-01-01T00%3A00%3A00Z')
+        .reply(200, { meta: { status: 'ok' }, 'objects': this.transactions });
+
+      this.promiseClient.transactions(this.accountId, {
+        cursor: 'cursor',
+        start: '2015-01-01T00:00:00Z',
+        end: '2016-01-01T00:00:00Z'
+      }).then(function(result) {
+        expect(result.data).to.eql(this.transactions);
+        scope.done();
+        done();
+      }.bind(this)).catch(done);
+    });
+
+    it('only includes passed options', function(done) {
+      var scope = nock('https://api.usebutton.com:443')
+        .get('/v1/affiliation/accounts/' + this.accountId + '/transactions?cursor=cursor')
+        .reply(200, { meta: { status: 'ok' }, 'objects': this.transactions });
+
+      this.promiseClient.transactions(this.accountId, {
+        cursor: 'cursor'
+      }).then(function(result) {
+        expect(result.data).to.eql(this.transactions);
+        scope.done();
         done();
       }.bind(this)).catch(done);
     });

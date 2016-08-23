@@ -95,7 +95,28 @@ promiseCreator(resolver) {
 }
 ```
 
-The returned promise will either reject with an `Error` or resolve with the API response.
+The returned promise will either reject with an `Error` or resolve with the API response object.
+
+## Responses
+
+All responses will assume the following shape: 
+
+```javascript
+{ 
+  data,
+  meta: {
+    next,
+    previous
+  }
+}
+```
+
+The `data` key will contain any resource data received from the API and the `meta` key will contain high-order information pertaining to the request.
+
+##### meta
+
+* `next`: For any paged resource, `next` will be a cursor to supply for the next page of results. 
+* `previous`: For any paged resource, `previous` will be a cursor to supply for the previous page of results. 
 
 ## Resources
 
@@ -151,7 +172,7 @@ client.orders.del('btnorder-XXX', function(err, res) {
 
 ### Accounts
 
-##### all
+##### All
 
 ```javascript
 var client = require('./index')('sk-XXX');
@@ -161,12 +182,34 @@ client.accounts.all(function(err, res) {
 });
 ```
 
-##### transactions
+##### Transactions
+
+Transactions are a paged resource.  The response object will contain properties `meta.next` and `meta.previous` which can be supplied to subsequent invocations of `#transactions` to fetch additional results. 
+
+`#transactions` accepts an optional second parameter, `options` which may define the follow keys to narrow results: 
+
+###### options
+
+* `cursor`: An API cursor to fetch a specific set of results
+* `start`: An ISO-8601 datetime string to filter only transactions after `start`
+* `end`: An ISO-8601 datetime string to filter only transactions before `end`
 
 ```javascript
 var client = require('./index')('sk-XXX');
 
+// without options argument
+//
 client.accounts.transactions('acc-1', function(err, res) {
+    // ...
+});
+ 
+// with options argument
+//
+client.accounts.transactions('acc-1', {
+  cursor: 'cXw',
+  start: '2015-01-01T00:00:00Z',
+  end: '2016-01-01T00:00:00Z'
+}, function(err, res) {
     // ...
 });
 ```
