@@ -365,4 +365,38 @@ describe('lib/#request', function() {
     });
   });
 
+  it('handles invalid next / previous meta attributes', function(done) {
+    var payload = {
+      meta: {
+        status: 'ok',
+        next: 'https://api.usebutton.com/api/3',
+        previous: 'https://api.usebutton.com/api/1'
+      }
+    };
+
+    var contentType = 'application/json';
+    var path = '/bleep/bloop';
+    var hostname = 'api.usebutton.com';
+    var user = 'sk-XXX';
+
+    var scope = nock('https://' + hostname + ':443', { reqheaders: { 'content-type': contentType } })
+      .get(path)
+      .basicAuth({ user: user, pass: '' })
+      .reply(200, payload);
+
+    this.request({
+      method: 'GET',
+      path: path,
+      hostname: hostname,
+      auth: user + ':',
+      headers: { 'Content-Type': contentType }
+    }, function(err, res) {
+      expect(err).to.be(null);
+      expect(res.data).to.eql(undefined);
+      expect(res.meta).to.eql({ next: null, previous: null });
+      scope.done();
+      done();
+    });
+  });
+
 });
