@@ -4,24 +4,19 @@ var expect = require('expect.js');
 var nock = require('nock');
 var Q = require('q');
 
-var orders = require('lib').resources.orders;
+var client = require('../../../index');
 
 describe('lib/resources/orders', function() {
 
   before(function() {
     nock.disableNetConnect();
-    var options = {
-      hostname: 'api.usebutton.com',
-      auth: 'sk-XXX:',
-      headers: { 'Content-Type': 'application/json' }
-    };
 
     var config = {
       promise: function(resolver) { return Q.Promise(resolver); }
     };
 
-    this.callbackClient = orders(options, {});
-    this.promiseClient = orders(options, config);
+    this.callbackClient = client('sk-XXX').orders;
+    this.promiseClient = client('sk-XXX', config).orders;
   });
 
   after(function() {
@@ -41,7 +36,7 @@ describe('lib/resources/orders', function() {
     it('gets an order with a callback', function(done) {
       this.callbackClient.get(this.orderId, function(err, res) {
         expect(err).to.be(null);
-        expect(res).to.eql(this.order);
+        expect(res.data).to.eql(this.order);
         this.scope.done();
         done();
       }.bind(this));
@@ -49,7 +44,7 @@ describe('lib/resources/orders', function() {
 
     it('gets an order with a promise', function(done) {
       this.promiseClient.get(this.orderId).then(function(result) {
-        expect(result).to.eql(this.order);
+        expect(result.data).to.eql(this.order);
         this.scope.done();
         done();
       }.bind(this)).catch(done);
@@ -93,7 +88,7 @@ describe('lib/resources/orders', function() {
     it('creates an order with a callback', function(done) {
       this.callbackClient.create(this.payload, function(err, res) {
         expect(err).to.be(null);
-        expect(res).to.eql(this.order);
+        expect(res.data).to.eql(this.order);
         this.scope.done();
         done();
       }.bind(this));
@@ -101,7 +96,7 @@ describe('lib/resources/orders', function() {
 
     it('creates an order with a promise', function(done) {
       this.promiseClient.create(this.payload).then(function(result) {
-        expect(result).to.eql(this.order);
+        expect(result.data).to.eql(this.order);
         this.scope.done();
         done();
       }.bind(this)).catch(done);
@@ -139,7 +134,7 @@ describe('lib/resources/orders', function() {
     it('updates an order with a callback', function(done) {
       this.callbackClient.update(this.orderId, this.payload, function(err, res) {
         expect(err).to.be(null);
-        expect(res).to.eql(this.order);
+        expect(res.data).to.eql(this.order);
         this.scope.done();
         done();
       }.bind(this));
@@ -147,7 +142,7 @@ describe('lib/resources/orders', function() {
 
     it('updates an order with a promise', function(done) {
       this.promiseClient.update(this.orderId, this.payload).then(function(result) {
-        expect(result).to.eql(this.order);
+        expect(result.data).to.eql(this.order);
         this.scope.done();
         done();
       }.bind(this)).catch(done);
@@ -168,7 +163,7 @@ describe('lib/resources/orders', function() {
     it('deletes an order with a callback', function(done) {
       this.callbackClient.del(this.orderId, function(err, res) {
         expect(err).to.be(null);
-        expect(res).to.eql(null);
+        expect(res.data).to.eql(null);
         this.scope.done();
         done();
       }.bind(this));
@@ -176,7 +171,7 @@ describe('lib/resources/orders', function() {
 
     it('deletes an order with a promise', function(done) {
       this.promiseClient.del(this.orderId).then(function(result) {
-        expect(result).to.eql(null);
+        expect(result.data).to.eql(null);
         this.scope.done();
         done();
       }.bind(this)).catch(done);

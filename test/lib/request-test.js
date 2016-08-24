@@ -14,7 +14,11 @@ function errorResponse(message) {
 
 function successResponse(obj) {
   return {
-    meta: { status: 'ok' },
+    meta: {
+      status: 'ok',
+      next: 'https://api.usebutton.com/api?cursor=1%3A',
+      previous: 'https://api.usebutton.com/api?cursor=3%3A'
+    },
     object: obj
   };
 }
@@ -53,7 +57,8 @@ describe('lib/#request', function() {
       headers: { 'Content-Type': contentType }
     }, function(err, res) {
       expect(err).to.be(null);
-      expect(res).to.eql(payload);
+      expect(res.data).to.eql(payload);
+      expect(res.meta).to.eql({ next: '1:', previous: '3:' });
       scope.done();
       done();
     });
@@ -80,7 +85,7 @@ describe('lib/#request', function() {
       headers: { 'Content-Type': contentType }
     }, postData, function(err, res) {
       expect(err).to.be(null);
-      expect(res).to.eql(payload);
+      expect(res.data).to.eql(payload);
       scope.done();
       done();
     });
@@ -106,7 +111,7 @@ describe('lib/#request', function() {
       headers: { 'Content-Type': contentType }
     }, function(err, res) {
       expect(err).to.be(null);
-      expect(res).to.eql(payload);
+      expect(res.data).to.eql(payload);
       scope.done();
       done();
     });
@@ -194,7 +199,7 @@ describe('lib/#request', function() {
       hostname: hostname
     }, function(err, res) {
       expect(err).to.be(null);
-      expect(res).to.eql(payload);
+      expect(res.data).to.eql(payload);
       scope.done();
       done();
     });
@@ -355,6 +360,40 @@ describe('lib/#request', function() {
     }, function(err, res) {
       expect(err.message).to.be('Invalid response: {"meta":{"status":"error"},"error":"wat"}');
       expect(res).to.eql(null);
+      scope.done();
+      done();
+    });
+  });
+
+  it('handles invalid next / previous meta attributes', function(done) {
+    var payload = {
+      meta: {
+        status: 'ok',
+        next: 'https://api.usebutton.com/api/3',
+        previous: 'https://api.usebutton.com/api/1'
+      }
+    };
+
+    var contentType = 'application/json';
+    var path = '/bleep/bloop';
+    var hostname = 'api.usebutton.com';
+    var user = 'sk-XXX';
+
+    var scope = nock('https://' + hostname + ':443', { reqheaders: { 'content-type': contentType } })
+      .get(path)
+      .basicAuth({ user: user, pass: '' })
+      .reply(200, payload);
+
+    this.request({
+      method: 'GET',
+      path: path,
+      hostname: hostname,
+      auth: user + ':',
+      headers: { 'Content-Type': contentType }
+    }, function(err, res) {
+      expect(err).to.be(null);
+      expect(res.data).to.eql(undefined);
+      expect(res.meta).to.eql({ next: null, previous: null });
       scope.done();
       done();
     });

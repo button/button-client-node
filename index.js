@@ -1,5 +1,6 @@
 var resources = require('./lib').resources;
 var maybePromise = require('./lib').maybePromise;
+var request = require('./lib').request;
 var version = require('./package.json').version;
 
 module.exports = function client(apiKey, config) {
@@ -31,7 +32,13 @@ module.exports = function client(apiKey, config) {
     }
   };
 
+  var maybePromiseRequest = maybePromise(
+    request(config.timeout),
+    config.promise
+  );
+
   return {
-    orders: resources.orders(requestOptions, config)
+    orders: resources.orders(requestOptions, maybePromiseRequest),
+    accounts: resources.accounts(requestOptions, maybePromiseRequest)
   };
 }
