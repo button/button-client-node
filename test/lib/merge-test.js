@@ -26,4 +26,9 @@ describe('lib/#merge', function() {
     expect(merged).to.eql({ a: 3, b: 3, c: 4 });
   });
 
+  it('skips non-objects', function() {
+    var merged = merge({ a : 1 }, undefined, null, 2, false, '', [0, 1, 2], { b: 3 });
+    expect(merged).to.eql({ a: 1, b: 3 });
+  });
+
 });

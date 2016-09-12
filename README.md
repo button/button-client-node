@@ -37,8 +37,11 @@ var client = require('button-client-node')('sk-XXX', {
 
 ##### Config
 
-* `timeout`: The time in ms for network requests to abort
+* `timeout`: The time in ms for network requests to abort.  Defaults to false.
 * `promise`: A function which accepts a resolver function and returns a promise.  Used to integrate with the promise library of your choice (i.e. es6 Promises, Bluebird, Q, etc).  If `promise` is supplied and is a function, all API functions will ignore any passed callbacks and instead return a promise. 
+* `hostname`: Defaults to `api.usebutton.com`
+* `port`: Defaults to `443` if `config.secure`, else defaults to `80`.
+* `secure`: Whether or not to use HTTPS.  Defaults to true.  **N.B: Button's API is only exposed through HTTPS.  This option is provided purely as a convenience for testing and development.**
 
 
 #### Node-style Callbacks

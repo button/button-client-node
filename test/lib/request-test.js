@@ -34,7 +34,7 @@ describe('lib/#request', function() {
   });
 
   beforeEach(function() {
-    this.request = request();
+    this.request = request(false, true);
   });
 
   it('makes a basic GET request', function(done) {
@@ -161,7 +161,7 @@ describe('lib/#request', function() {
   });
 
   it('handles timeout errors', function(done) {
-    var timeoutRequest = request(10);
+    var timeoutRequest = request(10, true);
     var path = '/bleep/bloop';
     var hostname = 'api.usebutton.com';
 
@@ -184,7 +184,7 @@ describe('lib/#request', function() {
 
   it('succeeds if faster than the timeout', function(done) {
     var payload = {};
-    var timeoutRequest = request(1000);
+    var timeoutRequest = request(1000, true);
     var path = '/bleep/bloop';
     var hostname = 'api.usebutton.com';
 
@@ -394,6 +394,27 @@ describe('lib/#request', function() {
       expect(err).to.be(null);
       expect(res.data).to.eql(undefined);
       expect(res.meta).to.eql({ next: null, previous: null });
+      scope.done();
+      done();
+    });
+  });
+
+  it('makes insecure requests', function(done) {
+    var insecureRequest = request(false, false);
+    var path = '/bleep/bloop';
+    var hostname = 'api.usebutton.com';
+
+    var scope = nock('http://' + hostname + ':80')
+      .get(path)
+      .reply(200, successResponse({}));
+
+    insecureRequest({
+      method: 'GET',
+      path: path,
+      hostname: hostname
+    }, function(err, res) {
+      expect(err).to.be(null);
+      expect(res.data).to.eql({});
       scope.done();
       done();
     });
