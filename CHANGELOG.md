@@ -1,3 +1,6 @@
+2.1.0 September 12, 2016
+ - Added config.hostname, config.port, and config.secure
+
 2.0.0 August 24, 2016
   - Added `accounts` resource
       + `accounts#all`
