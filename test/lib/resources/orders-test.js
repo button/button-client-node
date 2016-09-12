@@ -26,7 +26,7 @@ describe('lib/resources/orders', function() {
   describe('#get', function() {
 
     beforeEach(function() {
-      this.orderId = 'btnorder-4c944faaaa747dcb';
+      this.orderId = 'btnorder-XXX';
       this.order = { 'button_order_id': 'btnorder-XXX' };
       this.scope = nock('https://api.usebutton.com:443')
         .get('/v1/order/' + this.orderId)
