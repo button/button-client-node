@@ -130,7 +130,7 @@ We currently expose two resource to manage, `Orders` and `Accounts`.
 ##### Create
 
 ```javascript
-var client = require('./index')('sk-XXX');
+var client = require('button-client-node')('sk-XXX');
 
 client.orders.create({
   total: 50,
@@ -146,7 +146,7 @@ client.orders.create({
 ##### Get
 
 ```javascript
-var client = require('./index')('sk-XXX');
+var client = require('button-client-node')('sk-XXX');
 
 client.orders.get('btnorder-XXX', function(err, res) {
   // ...
@@ -156,7 +156,7 @@ client.orders.get('btnorder-XXX', function(err, res) {
 ##### Update
 
 ```javascript
-var client = require('./index')('sk-XXX');
+var client = require('button-client-node')('sk-XXX');
 
 client.orders.update('btnorder-XXX', { total: 60 }, function(err, res) {
   // ...
@@ -166,7 +166,7 @@ client.orders.update('btnorder-XXX', { total: 60 }, function(err, res) {
 ##### Delete
 
 ```javascript
-var client = require('./index')('sk-XXX');
+var client = require('button-client-node')('sk-XXX');
 
 client.orders.del('btnorder-XXX', function(err, res) {
   // ...
@@ -178,7 +178,7 @@ client.orders.del('btnorder-XXX', function(err, res) {
 ##### All
 
 ```javascript
-var client = require('./index')('sk-XXX');
+var client = require('button-client-node')('sk-XXX');
 
 client.accounts.all(function(err, res) {
     // ...
@@ -198,7 +198,7 @@ Transactions are a paged resource.  The response object will contain properties 
 * `end`: An ISO-8601 datetime string to filter only transactions before `end`
 
 ```javascript
-var client = require('./index')('sk-XXX');
+var client = require('button-client-node')('sk-XXX');
 
 // without options argument
 //
