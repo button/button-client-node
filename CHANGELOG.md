@@ -1,3 +1,6 @@
+2.1.1 October 12, 2016
+ - Renamed package to `@button/button-client-node`
+
 2.1.0 September 12, 2016
  - Added config.hostname, config.port, and config.secure
 

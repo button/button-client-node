@@ -15,13 +15,13 @@ Please see the full [API Docs](https://www.usebutton.com/developers/api-referenc
 ## Usage
 
 ```bash
-npm install button-client-node
+npm install @button/button-client-node
 ```
 
 To create a client capable of making network requests, invoke `button-client-node` with your [API key](https://app.usebutton.com/settings/organization). 
 
 ```javascript
-var client = require('button-client-node')('sk-XXX');
+var client = require('@button/button-client-node')('sk-XXX');
 ```
 
 You can optionally supply a `config` argument with your API key:
@@ -29,7 +29,7 @@ You can optionally supply a `config` argument with your API key:
 ```javascript
 var Q = require('q');
 
-var client = require('button-client-node')('sk-XXX', {
+var client = require('@button/button-client-node')('sk-XXX', {
   timeout: 3000, // network requests will time out at 3 seconds
   promise: function(resolver) { return Q.Promise(resolver); }
 });
@@ -49,7 +49,7 @@ var client = require('button-client-node')('sk-XXX', {
 `button-client-node` supports standard node-style callbacks.  To make a standard call, supply a `callback` function as the last argument to any API function and omit `promise` from your `config`. 
 
 ```javascript
-var client = require('button-client-node')('sk-XXX');
+var client = require('@button/button-client-node')('sk-XXX');
 
 client.orders.get('btnorder-XXX', function(err, res) {
   // ...
@@ -64,7 +64,7 @@ All callbacks will be invoked with two arguments.  `err` will be an `Error` obje
 
 ```javascript
 var Promise = require('bluebird');
-var client = require('button-client-node')('sk-XXX', {
+var client = require('@button/button-client-node')('sk-XXX', {
   promise: function(resolver) { return new Promise(resolver); }
 });
 
@@ -130,7 +130,7 @@ We currently expose two resource to manage, `Orders` and `Accounts`.
 ##### Create
 
 ```javascript
-var client = require('button-client-node')('sk-XXX');
+var client = require('@button/button-client-node')('sk-XXX');
 
 client.orders.create({
   total: 50,
@@ -146,7 +146,7 @@ client.orders.create({
 ##### Get
 
 ```javascript
-var client = require('button-client-node')('sk-XXX');
+var client = require('@button/button-client-node')('sk-XXX');
 
 client.orders.get('btnorder-XXX', function(err, res) {
   // ...
@@ -156,7 +156,7 @@ client.orders.get('btnorder-XXX', function(err, res) {
 ##### Update
 
 ```javascript
-var client = require('button-client-node')('sk-XXX');
+var client = require('@button/button-client-node')('sk-XXX');
 
 client.orders.update('btnorder-XXX', { total: 60 }, function(err, res) {
   // ...
@@ -166,7 +166,7 @@ client.orders.update('btnorder-XXX', { total: 60 }, function(err, res) {
 ##### Delete
 
 ```javascript
-var client = require('button-client-node')('sk-XXX');
+var client = require('@button/button-client-node')('sk-XXX');
 
 client.orders.del('btnorder-XXX', function(err, res) {
   // ...
@@ -178,7 +178,7 @@ client.orders.del('btnorder-XXX', function(err, res) {
 ##### All
 
 ```javascript
-var client = require('button-client-node')('sk-XXX');
+var client = require('@button/button-client-node')('sk-XXX');
 
 client.accounts.all(function(err, res) {
     // ...
@@ -198,7 +198,7 @@ Transactions are a paged resource.  The response object will contain properties 
 * `end`: An ISO-8601 datetime string to filter only transactions before `end`
 
 ```javascript
-var client = require('button-client-node')('sk-XXX');
+var client = require('@button/button-client-node')('sk-XXX');
 
 // without options argument
 //
