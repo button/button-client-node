@@ -2,7 +2,10 @@
   "name": "@button/button-client-node",
   "version": "2.1.1",
   "description": "node.js client for the Button Order API",
-  "repository": "https://github.com/button/button-client-node",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/button/button-client-node.git"
+  },
   "main": "index.js",
   "scripts": {
     "lint": "eslint --ext .js lib test",
