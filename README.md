@@ -217,6 +217,34 @@ client.accounts.transactions('acc-1', {
 });
 ```
 
+## Utils
+
+Utils houses generic helpers useful in a Button Integration.
+
+### #isWebhookAuthentic
+
+Used to verify that requests sent to a webhook endpoint are from Button and that their payload can be trusted. Returns `true` if a webhook request body matches the sent signature and `false` otherwise. See [Webhook Security](https://www.usebutton.com/developers/webhooks/#security) for more details.
+
+#### Example usage with [body-parser](https://www.npmjs.com/package/body-parser)
+
+```javascript
+var express = require('express');
+var bodyParser = require('body-parser');
+var utils = require('@button/button-client-node').utils
+
+var app = express();
+
+function verify(req, res, buf, encording) {
+  return utils.isWebhookAuthentic(
+    process.env['WEBHOOK_SECRET'],
+    buf,
+    req.headers['X-Button-Signature']
+  );
+}
+
+app.use(bodyParser.json({ verify: verify, type: 'application/json' }));
+```
+
 ## Contributing
 
 * Installing development dependencies: `npm install`
