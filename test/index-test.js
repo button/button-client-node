@@ -21,6 +21,10 @@ describe('client', function() {
     expect(typeof client('sk-XXX', {}).orders).to.eql('object');
   });
 
+  it('exposes the utils module', function() {
+    expect(typeof client.utils).to.eql('object');
+  });
+
   describe('config', function() {
     before(function() {
       nock.disableNetConnect();

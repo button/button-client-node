@@ -3,14 +3,17 @@ var maybePromise = require('./lib').maybePromise;
 var request = require('./lib').request;
 var merge = require('./lib').merge;
 var compact = require('./lib').compact;
+var utils = require('./lib').utils;
 var version = require('./package.json').version;
+
+module.exports = client;
 
 var configDefaults = {
   secure: true,
   timeout: false
 };
 
-module.exports = function client(apiKey, config) {
+function client(apiKey, config) {
   //
   // #client provides the top-level interface to making API requests to Button.
   // It requires a Button API key, which can be found at
@@ -57,3 +60,5 @@ module.exports = function client(apiKey, config) {
     accounts: resources.accounts(requestOptions, maybePromiseRequest)
   };
 }
+
+client.utils = utils;
