@@ -1,3 +1,6 @@
+2.2.0 January 4, 2017
+ - Add `client.utils.isWebhookAuthentic` function
+
 2.1.1 October 12, 2016
  - Renamed package to `@button/button-client-node`
 
