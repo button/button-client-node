@@ -234,7 +234,7 @@ var utils = require('@button/button-client-node').utils
 
 var app = express();
 
-function verify(req, res, buf, encording) {
+function verify(req, res, buf, encoding) {
   return utils.isWebhookAuthentic(
     process.env['WEBHOOK_SECRET'],
     buf,
