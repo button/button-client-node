@@ -38,6 +38,10 @@ describe('lib/utils', function() {
       expect(utils.isWebhookAuthentic('secret', payload, signature)).to.be(true);
     });
 
+    it('throws a helpful message when called with wrong arity', function() {
+      expect(utils.isWebhookAuthentic).withArgs('').to.throwException(/must be invoked with/);
+    });
+
   });
 
 });
