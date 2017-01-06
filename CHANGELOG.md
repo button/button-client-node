@@ -1,6 +1,6 @@
 2.3.0 January 6, 2017
  - Add `merchants` resource
-     +  `merchants#all`
+     + `merchants#all`
 
 2.2.0 January 4, 2017
  - Add `client.utils.isWebhookAuthentic` function
