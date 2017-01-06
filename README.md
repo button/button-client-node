@@ -179,7 +179,7 @@ client.accounts.transactions('acc-1', {
 
 ###### options
 
-* `status`: Status to filter by. One of ('approved', 'pending', or 'available')
+* `status`: Partnership status to filter by. One of ('approved', 'pending', or 'available')
 * `currency`: ISO-4217 currency code to filter returned rates by
 
 ```javascript
