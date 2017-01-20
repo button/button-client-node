@@ -267,11 +267,15 @@ var utils = require('@button/button-client-node').utils
 var app = express();
 
 function verify(req, res, buf, encoding) {
-  return utils.isWebhookAuthentic(
+  const authentic = utils.isWebhookAuthentic(
     process.env['WEBHOOK_SECRET'],
     buf,
     req.headers['X-Button-Signature']
   );
+  
+  if (!authentic) {
+    throw new Error('Invalid Webhook Signature');
+  }
 }
 
 app.use(bodyParser.json({ verify: verify, type: 'application/json' }));
