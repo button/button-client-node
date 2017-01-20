@@ -1,4 +1,4 @@
-# button-client-node [![Build Status](https://travis-ci.org/button/button-client-node.svg?branch=master)](https://travis-ci.com/button/button-client-node)
+# button-client-node [![Build Status](https://travis-ci.org/button/button-client-node.svg?branch=master)](https://travis-ci.org/button/button-client-node)
 
 This module is a thin client for interacting with Button's API.
 
