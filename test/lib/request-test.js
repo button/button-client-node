@@ -133,6 +133,8 @@ describe('lib/#request', function() {
       hostname: hostname
     }, function(err, res) {
       expect(err.message).to.be(error);
+      expect(err.response).to.be.ok();
+      expect(err.response.statusCode).to.eql(404);
       expect(res).to.eql(null);
       scope.done();
       done();
@@ -154,6 +156,7 @@ describe('lib/#request', function() {
       hostname: hostname
     }, function(err, res) {
       expect(err.message).to.be(error);
+      expect(err.response).to.not.be.ok();
       expect(res).to.eql(null);
       scope.done();
       done();
@@ -176,6 +179,7 @@ describe('lib/#request', function() {
       hostname: hostname
     }, function(err, res) {
       expect(err.message).to.be('Request timed out');
+      expect(err.response).to.not.be.ok();
       expect(res).to.eql(null);
       scope.done();
       done();
@@ -219,6 +223,8 @@ describe('lib/#request', function() {
       hostname: hostname
     }, function(err, res) {
       expect(err.message).to.be('Error parsing response as JSON: not json');
+      expect(err.response).to.be.ok();
+      expect(err.response.statusCode).to.eql(200);
       expect(res).to.eql(null);
       scope.done();
       done();
@@ -239,6 +245,8 @@ describe('lib/#request', function() {
       hostname: hostname
     }, function(err, res) {
       expect(err.message).to.be('Client received an empty response from the server');
+      expect(err.response).to.be.ok();
+      expect(err.response.statusCode).to.eql(200);
       expect(res).to.eql(null);
       scope.done();
       done();
@@ -259,6 +267,8 @@ describe('lib/#request', function() {
       hostname: hostname
     }, function(err, res) {
       expect(err.message).to.be('Unknown status: ???');
+      expect(err.response).to.be.ok();
+      expect(err.response.statusCode).to.eql(200);
       expect(res).to.eql(null);
       scope.done();
       done();
@@ -279,6 +289,8 @@ describe('lib/#request', function() {
       hostname: hostname
     }, function(err, res) {
       expect(err.message).to.be('Unknown status: ???');
+      expect(err.response).to.be.ok();
+      expect(err.response.statusCode).to.eql(200);
       expect(res).to.eql(null);
       scope.done();
       done();
@@ -299,6 +311,8 @@ describe('lib/#request', function() {
       hostname: hostname
     }, function(err, res) {
       expect(err.message).to.be('Invalid response: {}');
+      expect(err.response).to.be.ok();
+      expect(err.response.statusCode).to.eql(200);
       expect(res).to.eql(null);
       scope.done();
       done();
@@ -319,6 +333,8 @@ describe('lib/#request', function() {
       hostname: hostname
     }, function(err, res) {
       expect(err.message).to.be('Invalid response: {"meta":"wat"}');
+      expect(err.response).to.be.ok();
+      expect(err.response.statusCode).to.eql(200);
       expect(res).to.eql(null);
       scope.done();
       done();
@@ -339,6 +355,8 @@ describe('lib/#request', function() {
       hostname: hostname
     }, function(err, res) {
       expect(err.message).to.be('Invalid response: {"meta":{"status":"error"}}');
+      expect(err.response).to.be.ok();
+      expect(err.response.statusCode).to.eql(200);
       expect(res).to.eql(null);
       scope.done();
       done();
@@ -359,6 +377,8 @@ describe('lib/#request', function() {
       hostname: hostname
     }, function(err, res) {
       expect(err.message).to.be('Invalid response: {"meta":{"status":"error"},"error":"wat"}');
+      expect(err.response).to.be.ok();
+      expect(err.response.statusCode).to.eql(200);
       expect(res).to.eql(null);
       scope.done();
       done();
