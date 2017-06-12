@@ -58,6 +58,8 @@ client.orders.get('btnorder-XXX', function(err, res) {
 
 All callbacks will be invoked with two arguments.  `err` will be an `Error` object if an error occurred and `null` otherwise.  `res` will be the API response if the request succeeded or `null` otherwise.
 
+If an `Error` is returned after the client receives a response, such as for an upstream HTTP error, the `Error.response` property will be set to the NodeJS `response` object.
+
 #### Promise
 
 `button-client-node` supports a promise interface.  To make a promise-based request, supply a function that accepts a single resolver function and returns a new promise on the `promise` key of your `config`. Additionally, you must omit the callback from your API function call.
