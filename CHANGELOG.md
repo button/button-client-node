@@ -1,3 +1,6 @@
+2.4.0 June 12, 2017
+ - Request errors now include the `response` object.
+
 2.3.0 January 6, 2017
  - Add `merchants` resource
      + `merchants#all`
