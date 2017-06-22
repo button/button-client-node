@@ -13,6 +13,16 @@ var configDefaults = {
   timeout: false
 };
 
+function headers(apiVersion) {
+  const nodeVersion = process.versions.node;
+  const userAgent = 'button-client-node/' + version + ' node/' + nodeVersion;
+
+  return merge(compact({ 'X-Button-API-Version': apiVersion }), {
+    'Content-Type': 'application/json',
+    'User-Agent': userAgent
+  });
+}
+
 function client(apiKey, config) {
   //
   // #client provides the top-level interface to making API requests to Button.
@@ -26,6 +36,8 @@ function client(apiKey, config) {
   // @param {bool=} config.secure will use HTTPS if true and HTTP if false
   // @param {number=} config.timeout a timeout in ms to abort API calls
   // @param {Func=} config.promise a function which should return a promise
+  // @param {string=} config.apiVersion a string pinning your API version for
+  //   the request
   // @returns {Object} a client
   //
   if (!apiKey) {
@@ -44,10 +56,7 @@ function client(apiKey, config) {
 
   var requestOptions = merge(requestConfig, {
     auth: apiKey + ':',
-    headers: {
-      'Content-Type': 'application/json',
-      'User-Agent': 'button-client-node/' + version + ' node/' + process.versions.node
-    }
+    headers: headers(config.apiVersion)
   });
 
   var maybePromiseRequest = maybePromise(
