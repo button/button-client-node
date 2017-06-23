@@ -1,4 +1,7 @@
 Current Version
+ -
+
+2.5.0 June 23, 2017
   - Add apiVersion to client config
 
 2.4.0 June 12, 2017
