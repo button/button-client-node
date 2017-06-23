@@ -37,7 +37,7 @@ function client(apiKey, config) {
   // @param {number=} config.timeout a timeout in ms to abort API calls
   // @param {Func=} config.promise a function which should return a promise
   // @param {string=} config.apiVersion a string pinning your API version for
-  //   the request
+  //   the request (YYYY-MM-DD)
   // @returns {Object} a client
   //
   if (!apiKey) {
