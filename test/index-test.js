@@ -37,8 +37,9 @@ describe('client', function() {
     it('defaults config options', function(done) {
       var c = client('sk-XXX').orders;
       var orderId = 'btnorder-XXX';
-      var scope = nock('https://api.usebutton.com:443')
-        .get('/v1/order/' + orderId)
+      var scope = nock('https://api.usebutton.com:443', {
+        badheaders: ['x-button-api-version']
+      }).get('/v1/order/' + orderId)
         .reply(200, { meta: { status: 'ok' }, 'object': {} });
 
       c.get(orderId, function(err) {
@@ -81,6 +82,23 @@ describe('client', function() {
       var orderId = 'btnorder-XXX';
       var scope = nock('https://api.usebutton.com:1989')
         .get('/v1/order/' + orderId)
+        .reply(200, { meta: { status: 'ok' }, 'object': {} });
+
+      c.get(orderId, function(err) {
+        expect(err).to.be(null);
+        scope.done();
+        done();
+      }.bind(this));
+    });
+
+    it('sets the API Version', function(done) {
+      var c = client('sk-XXX', { apiVersion: '2017-01-01' }).orders;
+      var orderId = 'btnorder-XXX';
+      var scope = nock('https://api.usebutton.com', {
+        reqheaders: {
+          'x-button-api-version': '2017-01-01'
+        }
+      }).get('/v1/order/' + orderId)
         .reply(200, { meta: { status: 'ok' }, 'object': {} });
 
       c.get(orderId, function(err) {
