@@ -208,7 +208,12 @@ client.merchants.all({
 ##### Create
 
 ```javascript
+var crypto = require('crypto');
 var client = require('@button/button-client-node')('sk-XXX');
+
+var hashedEmail = crypto.createHash('sha256')
+  .update('user@example.com'.toLowerCase().trim())
+  .digest('hex')
 
 client.orders.create({
   total: 50,
@@ -218,7 +223,7 @@ client.orders.create({
   btn_ref: 'srctok-XXX',
   customer: {
     id: 'mycustomer-1234',
-    email_sha256: crypto.createHash('sha256').update('user@example.com'.toLowerCase().trim()).digest('hex')
+    email_sha256: hashedEmail
   }
 }, function(err, res) {
     // ...
