@@ -214,8 +214,12 @@ client.orders.create({
   total: 50,
   currency: 'USD',
   order_id: '1989',
+  finalization_date: '2017-08-02T19:26:08Z',
   btn_ref: 'srctok-XXX',
-  finalization_date: '2017-08-02T19:26:08Z'
+  customer: {
+    id: 'mycustomer-1234',
+    email_sha256: crypto.createHash('sha256').update('user@example.com'.toLowerCase().trim()).digest('hex')
+  }
 }, function(err, res) {
     // ...
 });
@@ -274,7 +278,7 @@ function verify(req, res, buf, encoding) {
     buf,
     req.headers['X-Button-Signature']
   );
-  
+
   if (!isAuthentic) {
     throw new Error('Invalid Webhook Signature');
   }
