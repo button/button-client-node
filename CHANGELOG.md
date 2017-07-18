@@ -1,7 +1,7 @@
 Current Version
  -
 
-2.6.0 July 16, 2017
+2.6.0 July 18, 2017
   - Add `customers` resource
     + `customers#create`
     + `customers#get`
