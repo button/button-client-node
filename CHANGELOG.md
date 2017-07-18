@@ -1,6 +1,11 @@
 Current Version
  -
 
+2.6.0 July 16, 2017
+  - Add `customers` resource
+    + `customers#create`
+    + `customers#get`
+
 2.5.0 June 23, 2017
   - Add apiVersion to client config
 
@@ -28,4 +33,3 @@ Current Version
 
 1.0.0 August 5, 2016
   - Initial Release
-
