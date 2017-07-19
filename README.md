@@ -213,7 +213,7 @@ var client = require('@button/button-client-node')('sk-XXX');
 
 var hashedEmail = crypto.createHash('sha256')
   .update('user@example.com'.toLowerCase().trim())
-  .digest('hex')
+  .digest('hex');
 
 client.orders.create({
   total: 50,
@@ -270,14 +270,13 @@ var client = require('@button/button-client-node')('sk-XXX');
 
 var hashedEmail = crypto.createHash('sha256')
   .update('user@example.com'.toLowerCase().trim())
-  .digest('hex')
+  .digest('hex');
 
 client.customers.create({
-  id: 'customer-XXX',
-  email_sha256: hashedEmail,
-  advertising_id: '6E82078A-8146-4BA4-AC5B-76104861E61A',
+  id: 'customer-1234',
+  email_sha256: hashedEmail
 }, function(err, res) {
-    // ...
+  // ...
 });
 ```
 
@@ -286,7 +285,7 @@ client.customers.create({
 ```javascript
 var client = require('@button/button-client-node')('sk-XXX');
 
-client.customers.get('customer-XXX', function(err, res) {
+client.customers.get('customer-1234', function(err, res) {
   // ...
 });
 ```
