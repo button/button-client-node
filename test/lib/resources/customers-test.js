@@ -62,7 +62,7 @@ describe('lib/resources/customers', function() {
         customer_id: this.customerId
       };
 
-      this.customer = {
+      this.customerId = {
         id: 'customer-1234'
       };
 
