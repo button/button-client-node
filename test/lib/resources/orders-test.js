@@ -52,6 +52,35 @@ describe('lib/resources/orders', function() {
 
   });
 
+  describe('#getByBtnRef', function() {
+
+    beforeEach(function() {
+      this.btnRef = 'srctok-XXX';
+      this.order = { 'button_order_id': 'srctok-XXX' };
+      this.scope = nock('https://api.usebutton.com:443')
+        .get('/v1/order/btn-ref/' + this.btnRef)
+        .reply(200, { meta: { status: 'ok' }, 'objects': [this.order] });
+    });
+
+    it('gets an order with a callback', function(done) {
+      this.callbackClient.getByBtnRef(this.btnRef, function(err, res) {
+        expect(err).to.be(null);
+        expect(res.data[0]).to.eql(this.order);
+        this.scope.done();
+        done();
+      }.bind(this));
+    });
+
+    it('gets an order with a promise', function(done) {
+      this.promiseClient.getByBtnRef(this.btnRef).then(function(result) {
+        expect(result.data[0]).to.eql(this.order);
+        this.scope.done();
+        done();
+      }.bind(this)).catch(done);
+    });
+
+  });
+
   describe('#create', function() {
 
     beforeEach(function() {
