@@ -240,6 +240,16 @@ client.orders.get('btnorder-XXX', function(err, res) {
 });
 ```
 
+##### Get by Button Ref
+
+```javascript
+var client = require('@button/button-client-node')('sk-XXX');
+
+client.orders.getByBtnRef('srctok-XXX', function (err, res) {
+  // ...
+});
+```
+
 ##### Update
 
 ```javascript
