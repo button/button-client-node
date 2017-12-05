@@ -97,9 +97,6 @@ describe('lib/resources/links', function() {
         }
       };
 
-      console.log(this.payload)
-      console.log(this.link)
-
       this.scope = nock('https://api.usebutton.com:443')
         .post('/v1/links/info', this.payload)
         .reply(200, { meta: { status: 'ok' }, 'object': this.link });
