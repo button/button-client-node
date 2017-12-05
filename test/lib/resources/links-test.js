@@ -88,7 +88,7 @@ describe('lib/resources/links', function() {
           web_to_app: false,
           web_to_app_with_install: false
         },
-       android_support: {
+        android_support: {
           app_to_web: true,
           app_to_app: true,
           web_to_web: true,
@@ -98,7 +98,7 @@ describe('lib/resources/links', function() {
       };
 
       this.scope = nock('https://api.usebutton.com:443')
-        .post('/v1/links/info', this.payload)
+        .post('/v1/links', this.payload)
         .reply(200, { meta: { status: 'ok' }, 'object': this.link });
     });
 
