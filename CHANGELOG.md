@@ -1,6 +1,9 @@
 Current Version
  -
 
+2.8.0 December 5, 2017
+  - Add Links API
+
 2.7.0 November 6, 2017
   - Add get orders by button ref
 
