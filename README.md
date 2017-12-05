@@ -300,6 +300,32 @@ client.customers.get('customer-1234', function(err, res) {
 });
 ```
 
+### Links
+
+##### Create
+
+```javascript
+client.links.create({
+  url: "https://www.jet.com",
+  experience: {
+    btn_pub_ref: "my-pub-ref",
+    btn_pub_user: "user-id"
+  }
+}, function(err, res) {
+  // ...
+});
+```
+
+##### Get Info
+
+```javascript
+client.links.getInfo({
+  url: "https://www.jet.com"
+}, function(err, res) {
+  // ...
+});
+```
+
 ## Utils
 
 Utils houses generic helpers useful in a Button Integration.
