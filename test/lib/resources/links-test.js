@@ -26,7 +26,7 @@ describe('lib/resources/links', function() {
   describe('#create', function() {
 
     beforeEach(function() {
-      this.url = 'https:/www.jet.com/';
+      this.url = 'https://www.jet.com/';
       this.experience = {
         btn_pub_ref: 'my-pub-ref',
         btn_pub_user: 'user-id'
@@ -72,7 +72,7 @@ describe('lib/resources/links', function() {
   describe('#getInfo', function() {
 
     beforeEach(function() {
-      this.url = 'https:/www.jet.com/';
+      this.url = 'https://www.jet.com/';
 
       this.payload = {
         url: this.url
