@@ -98,12 +98,12 @@ describe('lib/resources/links', function() {
       };
 
       this.scope = nock('https://api.usebutton.com:443')
-        .post('/v1/links', this.payload)
+        .post('/v1/links/info', this.payload)
         .reply(200, { meta: { status: 'ok' }, 'object': this.link });
     });
 
     it('gets information for a link with a callback', function(done) {
-      this.callbackClient.create(this.payload, function(err, res) {
+      this.callbackClient.getInfo(this.payload, function(err, res) {
         expect(err).to.be(null);
         expect(res.data).to.eql(this.link);
         this.scope.done();
@@ -112,7 +112,7 @@ describe('lib/resources/links', function() {
     });
 
     it('gets information for a link with a promise', function(done) {
-      this.promiseClient.create(this.payload).then(function(result) {
+      this.promiseClient.getInfo(this.payload).then(function(result) {
         expect(result.data).to.eql(this.link);
         this.scope.done();
         done();
