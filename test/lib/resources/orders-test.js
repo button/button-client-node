@@ -87,12 +87,14 @@ describe('lib/resources/orders', function() {
       this.total = 50;
       this.currency = 'USD';
       this.orderId = '1989';
+      this.purchaseDate = '2017-07-25T08:23:52Z';
       this.finalizationDate = '2017-08-02T19:26:08Z';
 
       this.payload = {
         total: this.total,
         currency: this.currency,
         order_id: this.orderId,
+        purchase_date: this.purchaseDate,
         finalization_date: this.finalizationDate
       };
 
@@ -106,6 +108,7 @@ describe('lib/resources/orders', function() {
         ifa: null,
         line_items: [],
         status: 'open',
+        purchase_date: this.purchaseDate,        
         finalization_date: this.finalizationDate
       };
 
