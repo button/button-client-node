@@ -67,9 +67,9 @@ function client(apiKey, config) {
   return {
     accounts: resources.accounts(requestOptions, maybePromiseRequest),
     customers: resources.customers(requestOptions, maybePromiseRequest),
+    links: resources.links(requestOptions, maybePromiseRequest),
     merchants: resources.merchants(requestOptions, maybePromiseRequest),
-    orders: resources.orders(requestOptions, maybePromiseRequest),
-    links: resources.links(requestOptions, maybePromiseRequest)
+    orders: resources.orders(requestOptions, maybePromiseRequest)
   };
 }
 
