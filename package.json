@@ -1,6 +1,6 @@
 {
   "name": "@button/button-client-node",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "description": "node.js client for the Button Order API",
   "repository": {
     "type": "git",
