@@ -219,6 +219,7 @@ client.orders.create({
   total: 50,
   currency: 'USD',
   order_id: '1989',
+  purchase_date: '2017-07-25T08:23:52Z',
   finalization_date: '2017-08-02T19:26:08Z',
   btn_ref: 'srctok-XXX',
   customer: {
