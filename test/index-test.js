@@ -1,5 +1,6 @@
 'use strict';
 
+require('./lib/polyfillObjectAssign');
 var expect = require('expect.js');
 var nock = require('nock');
 
