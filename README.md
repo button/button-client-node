@@ -6,7 +6,7 @@ Please see the full [API Docs](https://www.usebutton.com/developers/api-referenc
 
 #### Supported runtimes
 
-* Node `0.10`, `0.11`, `0.12`, `4`, `5`, `6`
+* Node `0.10`, `0.11`, `0.12`, `4`, `5`, `6`, `8`, `10`
 
 #### Dependencies
 
