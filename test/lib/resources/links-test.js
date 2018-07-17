@@ -1,22 +1,13 @@
 'use strict';
 
-var expect = require('expect.js');
-var nock = require('nock');
-var Q = require('q');
-
-var client = require('../../../index');
+const expect = require('chai').expect;
+const client = require('../../../index')('sk-XXX').links;
+let nock = require('nock');
 
 describe('lib/resources/links', function() {
 
   before(function() {
     nock.disableNetConnect();
-
-    var config = {
-      promise: function(resolver) { return Q.Promise(resolver); }
-    };
-
-    this.callbackClient = client('sk-XXX').links;
-    this.promiseClient = client('sk-XXX', config).links;
   });
 
   after(function() {
@@ -24,20 +15,25 @@ describe('lib/resources/links', function() {
   });
 
   describe('#create', function() {
+    let url;
+    let experience;
+    let payload;
+    let link;
+    let scope;
 
     beforeEach(function() {
-      this.url = 'https://www.jet.com/';
-      this.experience = {
+      url = 'https://www.jet.com/';
+      experience = {
         btn_pub_ref: 'my-pub-ref',
         btn_pub_user: 'user-id'
       };
 
-      this.payload = {
-        url: this.url,
-        experience: this.experience
+      payload = {
+        url: url,
+        experience: experience
       };
 
-      this.link = {
+      link = {
         merchant_id: 'org-XXX',
         affiliate: null,
         links: {
@@ -45,40 +41,35 @@ describe('lib/resources/links', function() {
         }
       };
 
-      this.scope = nock('https://api.usebutton.com:443')
-        .post('/v1/links', this.payload)
-        .reply(200, { meta: { status: 'ok' }, 'object': this.link });
+      scope = nock('https://api.usebutton.com:443')
+        .post('/v1/links', payload)
+        .reply(200, { meta: { status: 'ok' }, 'object': link });
     });
 
-    it('creates a link with a callback', function(done) {
-      this.callbackClient.create(this.payload, function(err, res) {
-        expect(err).to.be(null);
-        expect(res.data).to.eql(this.link);
-        this.scope.done();
-        done();
-      }.bind(this));
-    });
+    afterEach(() => scope.done());
 
-    it('creates a link with a promise', function(done) {
-      this.promiseClient.create(this.payload).then(function(result) {
-        expect(result.data).to.eql(this.link);
-        this.scope.done();
-        done();
-      }.bind(this)).catch(done);
+    it('creates a link with a promise', () => {
+      return client.create(payload).then((result) => {
+        expect(result.data).to.deep.equal(link);
+      });
     });
 
   });
 
   describe('#getInfo', function() {
+    let url;
+    let payload;
+    let link;
+    let scope;
 
     beforeEach(function() {
-      this.url = 'https://www.jet.com/';
+      url = 'https://www.jet.com/';
 
-      this.payload = {
-        url: this.url
+      payload = {
+        url: url
       };
 
-      this.link = {
+      link = {
         organization_id: 'org-XXX',
         approved: true,
         ios_support: {
@@ -97,26 +88,17 @@ describe('lib/resources/links', function() {
         }
       };
 
-      this.scope = nock('https://api.usebutton.com:443')
-        .post('/v1/links/info', this.payload)
-        .reply(200, { meta: { status: 'ok' }, 'object': this.link });
+      scope = nock('https://api.usebutton.com:443')
+        .post('/v1/links/info', payload)
+        .reply(200, { meta: { status: 'ok' }, 'object': link });
     });
 
-    it('gets information for a link with a callback', function(done) {
-      this.callbackClient.getInfo(this.payload, function(err, res) {
-        expect(err).to.be(null);
-        expect(res.data).to.eql(this.link);
-        this.scope.done();
-        done();
-      }.bind(this));
-    });
+    afterEach(() => scope.done());
 
-    it('gets information for a link with a promise', function(done) {
-      this.promiseClient.getInfo(this.payload).then(function(result) {
-        expect(result.data).to.eql(this.link);
-        this.scope.done();
-        done();
-      }.bind(this)).catch(done);
+    it('gets information for a link with a promise', () => {
+      return client.getInfo(payload).then((result) => {
+        expect(result.data).to.deep.equal(link);
+      });
     });
 
   });

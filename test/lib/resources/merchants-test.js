@@ -1,22 +1,14 @@
 'use strict';
 
-var expect = require('expect.js');
-var nock = require('nock');
-var Q = require('q');
+const expect = require('chai').expect;
+const client = require('../../../index')('sk-XXX').merchants;
+let nock = require('nock');
 
-var client = require('../../../index');
 
 describe('lib/resources/merchants', function() {
 
   before(function() {
     nock.disableNetConnect();
-
-    var config = {
-      promise: function(resolver) { return Q.Promise(resolver); }
-    };
-
-    this.callbackClient = client('sk-XXX').merchants;
-    this.promiseClient = client('sk-XXX', config).merchants;
   });
 
   after(function() {
@@ -24,44 +16,35 @@ describe('lib/resources/merchants', function() {
   });
 
   describe('#all', function() {
+    let merchants;
+    let scope;
 
     beforeEach(function() {
-      this.merchants = [{ 'id': 'org-1' }];
-      this.scope = nock('https://api.usebutton.com:443')
+      merchants = [{ 'id': 'org-1' }];
+      scope = nock('https://api.usebutton.com:443')
         .get('/v1/merchants')
-        .reply(200, { meta: { status: 'ok' }, 'objects': this.merchants });
+        .reply(200, { meta: { status: 'ok' }, 'objects': merchants });
     });
 
-    it('gets a list of merchants with a callback', function(done) {
-      this.callbackClient.all(function(err, res) {
-        expect(err).to.be(null);
-        expect(res.data).to.eql(this.merchants);
-        this.scope.done();
-        done();
-      }.bind(this));
+    afterEach(() => scope.done());
+
+    it('gets a list of merchants with a promise', () => {
+      return client.all().then((result) => {
+        expect(result.data).to.deep.equal(merchants);
+      });
     });
 
-    it('gets a list of merchants with a promise', function(done) {
-      this.promiseClient.all().then(function(result) {
-        expect(result.data).to.eql(this.merchants);
-        this.scope.done();
-        done();
-      }.bind(this)).catch(done);
-    });
-
-    it('gets a list of merchants with query params', function(done) {
-      var scope = nock('https://api.usebutton.com:443')
+    it('gets a list of merchants with query params', () => {
+      scope = nock('https://api.usebutton.com:443')
         .get('/v1/merchants?status=pending&currency=USD')
-        .reply(200, { meta: { status: 'ok' }, 'objects': this.merchants });
+        .reply(200, { meta: { status: 'ok' }, 'objects': merchants });
 
-      this.promiseClient.all({
+      return client.all({
         status: 'pending',
         currency: 'USD'
-      }).then(function(result) {
-        expect(result.data).to.eql(this.merchants);
-        scope.done();
-        done();
-      }.bind(this)).catch(done);
+      }).then((result) => {
+        expect(result.data).to.deep.equal(merchants);
+      });
     });
 
   });

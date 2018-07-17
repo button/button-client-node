@@ -6,7 +6,7 @@ Please see the full [API Docs](https://www.usebutton.com/developers/api-referenc
 
 #### Supported runtimes
 
-* Node `0.10`, `0.11`, `0.12`, `4`, `5`, `6`, `8`, `10`
+* Node `6`, `8`, `10`
 
 #### Dependencies
 
@@ -21,83 +21,37 @@ npm install @button/button-client-node
 To create a client capable of making network requests, invoke `button-client-node` with your [API key](https://app.usebutton.com/settings/organization).
 
 ```javascript
-var client = require('@button/button-client-node')('sk-XXX');
+const client = require('@button/button-client-node')('sk-XXX');
 ```
 
 You can optionally supply a `config` argument with your API key:
 
 ```javascript
-var Q = require('q');
-
-var client = require('@button/button-client-node')('sk-XXX', {
+const client = require('@button/button-client-node')('sk-XXX', {
   timeout: 3000, // network requests will time out at 3 seconds
-  promise: function(resolver) { return Q.Promise(resolver); }
+  hostname: 'api.usebutton.com' // default hostname for api requests
 });
 ```
 
 ##### Config
 
 * `timeout`: The time in ms for network requests to abort.  Defaults to false.
-* `promise`: A function which accepts a resolver function and returns a promise.  Used to integrate with the promise library of your choice (i.e. es6 Promises, Bluebird, Q, etc).  If `promise` is supplied and is a function, all API functions will ignore any passed callbacks and instead return a promise.
 * `hostname`: Defaults to `api.usebutton.com`
 * `port`: Defaults to `443` if `config.secure`, else defaults to `80`.
 * `secure`: Whether or not to use HTTPS.  Defaults to true.  **N.B: Button's API is only exposed through HTTPS.  This option is provided purely as a convenience for testing and development.**
 
-
-#### Node-style Callbacks
-
-`button-client-node` supports standard node-style callbacks.  To make a standard call, supply a `callback` function as the last argument to any API function and omit `promise` from your `config`.
-
-```javascript
-var client = require('@button/button-client-node')('sk-XXX');
-
-client.orders.get('btnorder-XXX', function(err, res) {
-  // ...
-});
-```
-
-All callbacks will be invoked with two arguments.  `err` will be an `Error` object if an error occurred and `null` otherwise.  `res` will be the API response if the request succeeded or `null` otherwise.
-
-If an `Error` is returned after the client receives a response, such as for an upstream HTTP error, the `Error.response` property will be set to the NodeJS `response` object.
-
 #### Promise
 
-`button-client-node` supports a promise interface.  To make a promise-based request, supply a function that accepts a single resolver function and returns a new promise on the `promise` key of your `config`. Additionally, you must omit the callback from your API function call.
+`button-client-node` uses native Promises for all requests:
 
 ```javascript
-var Promise = require('bluebird');
-var client = require('@button/button-client-node')('sk-XXX', {
-  promise: function(resolver) { return new Promise(resolver); }
+const client = require('@button/button-client-node')('sk-XXX', {
+  timeout: 3000
 });
 
-client.orders.get('btnorder-XXX').then(function(result)  {
-  // ...
-}, function(reason) {
-  // ...
-});
-```
-
-A resolver function has the signature `function(resolve, reject) { ... }` and is supported by many promise implementations:
-
-* [ES6 Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)
-* [Bluebird](http://bluebirdjs.com/docs/api/new-promise.html)
-* [Q](https://github.com/kriskowal/q/wiki/API-Reference#qpromiseresolver)
-* [then](https://github.com/then/promise#new-promiseresolver)
-
-If your promise library of choice doesn't support such a function, you can always roll your own as long as your library supports resolving and rejecting a promise you create:
-
-```javascript
-promiseCreator(resolver) {
-  var promise = SpecialPromise();
-
-  resolver(function(result) {
-    promise.resolve(result);
-  }, function(reason) {
-    promise.reject(reason);
-  });
-
-  return promise;
-}
+client.orders.get('btnorder-XXX')
+  .then((result) => handleResult(result))
+  .catch((error) => handleError(error))
 ```
 
 The returned promise will either reject with an `Error` or resolve with the API response object.
@@ -136,11 +90,11 @@ We currently expose the following resources to manage:
 ##### All
 
 ```javascript
-var client = require('@button/button-client-node')('sk-XXX');
+const client = require('@button/button-client-node')('sk-XXX');
 
-client.accounts.all(function(err, res) {
-    // ...
-});
+client.accounts.all()
+  .then((accounts) => handleAccounts(accounts))
+  .catch((error) => handleError(error));
 ```
 
 ##### Transactions
@@ -156,13 +110,13 @@ Transactions are a paged resource.  The response object will contain properties 
 * `end`: An ISO-8601 datetime string to filter only transactions before `end`
 
 ```javascript
-var client = require('@button/button-client-node')('sk-XXX');
+const client = require('@button/button-client-node')('sk-XXX');
 
 // without options argument
 //
-client.accounts.transactions('acc-1', function(err, res) {
-    // ...
-});
+client.accounts.transactions('acc-1')
+  .then(handleSuccess)
+  .catch(handleError);
 
 // with options argument
 //
@@ -170,9 +124,8 @@ client.accounts.transactions('acc-1', {
   cursor: 'cXw',
   start: '2015-01-01T00:00:00Z',
   end: '2016-01-01T00:00:00Z'
-}, function(err, res) {
-    // ...
-});
+}).then(handleSuccess)
+  .catch(handleError);
 ```
 
 ### Merchants
@@ -185,22 +138,21 @@ client.accounts.transactions('acc-1', {
 * `currency`: ISO-4217 currency code to filter returned rates by
 
 ```javascript
-var client = require('@button/button-client-node')('sk-XXX');
+const client = require('@button/button-client-node')('sk-XXX');
 
 // without options argument
 //
-client.merchants.all(function(err, res) {
-    // ...
-});
+client.merchants.all()
+  .then()
+  .catch();
 
 // with options argument
 //
 client.merchants.all({
   status: 'pending',
   currency: 'USD'
-}, function(err, res) {
-    // ...
-});
+}).then(handleSuccess)
+  .catch(handleError);
 ```
 
 ### Orders
@@ -208,10 +160,10 @@ client.merchants.all({
 ##### Create
 
 ```javascript
-var crypto = require('crypto');
-var client = require('@button/button-client-node')('sk-XXX');
+const crypto = require('crypto');
+const client = require('@button/button-client-node')('sk-XXX');
 
-var hashedEmail = crypto.createHash('sha256')
+const hashedEmail = crypto.createHash('sha256')
   .update('user@example.com'.toLowerCase().trim())
   .digest('hex');
 
@@ -226,49 +178,48 @@ client.orders.create({
     id: 'mycustomer-1234',
     email_sha256: hashedEmail
   }
-}, function(err, res) {
-    // ...
-});
+}).then(handleSuccess)
+  .catch(handleError);
 ```
 
 ##### Get
 
 ```javascript
-var client = require('@button/button-client-node')('sk-XXX');
+const client = require('@button/button-client-node')('sk-XXX');
 
-client.orders.get('btnorder-XXX', function(err, res) {
-  // ...
-});
+client.orders.get('btnorder-XXX')
+  .then(handleSuccess)
+  .catch(handleError);
 ```
 
 ##### Get by Button Ref
 
 ```javascript
-var client = require('@button/button-client-node')('sk-XXX');
+const client = require('@button/button-client-node')('sk-XXX');
 
-client.orders.getByBtnRef('srctok-XXX', function (err, res) {
-  // ...
-});
+client.orders.getByBtnRef('srctok-XXX')
+  .then(handleSuccess)
+  .catch(handleError);
 ```
 
 ##### Update
 
 ```javascript
-var client = require('@button/button-client-node')('sk-XXX');
+const client = require('@button/button-client-node')('sk-XXX');
 
-client.orders.update('btnorder-XXX', { total: 60 }, function(err, res) {
-  // ...
-});
+client.orders.update('btnorder-XXX', { total: 60 })
+  .then(handleSuccess)
+  .catch(handleError);
 ```
 
 ##### Delete
 
 ```javascript
-var client = require('@button/button-client-node')('sk-XXX');
+const client = require('@button/button-client-node')('sk-XXX');
 
-client.orders.del('btnorder-XXX', function(err, res) {
-  // ...
-});
+client.orders.del('btnorder-XXX')
+  .then(handleSuccess)
+  .catch(handleError);;
 ```
 
 ### Customers
@@ -276,29 +227,28 @@ client.orders.del('btnorder-XXX', function(err, res) {
 ##### Create
 
 ```javascript
-var crypto = require('crypto');
-var client = require('@button/button-client-node')('sk-XXX');
+const crypto = require('crypto');
+const client = require('@button/button-client-node')('sk-XXX');
 
-var hashedEmail = crypto.createHash('sha256')
+const hashedEmail = crypto.createHash('sha256')
   .update('user@example.com'.toLowerCase().trim())
   .digest('hex');
 
 client.customers.create({
   id: 'customer-1234',
   email_sha256: hashedEmail
-}, function(err, res) {
-  // ...
-});
+}).then(handleSuccess)
+  .catch(handleError);
 ```
 
 ##### Get
 
 ```javascript
-var client = require('@button/button-client-node')('sk-XXX');
+const client = require('@button/button-client-node')('sk-XXX');
 
-client.customers.get('customer-1234', function(err, res) {
-  // ...
-});
+client.customers.get('customer-1234')
+  .then(handleSuccess)
+  .catch(handleError);
 ```
 
 ### Links
@@ -312,19 +262,16 @@ client.links.create({
     btn_pub_ref: "my-pub-ref",
     btn_pub_user: "user-id"
   }
-}, function(err, res) {
-  // ...
-});
+}).then(handleSuccess)
+  .catch(handleError);
 ```
 
 ##### Get Info
 
 ```javascript
-client.links.getInfo({
-  url: "https://www.jet.com"
-}, function(err, res) {
-  // ...
-});
+client.links.getInfo({ url: "https://www.jet.com" })
+  .then(handleSuccess)
+  .catch(handleError);
 ```
 
 ## Utils
@@ -338,14 +285,14 @@ Used to verify that requests sent to a webhook endpoint are from Button and that
 #### Example usage with [body-parser](https://www.npmjs.com/package/body-parser)
 
 ```javascript
-var express = require('express');
-var bodyParser = require('body-parser');
-var utils = require('@button/button-client-node').utils
+const express = require('express');
+const bodyParser = require('body-parser');
+const utils = require('@button/button-client-node').utils
 
-var app = express();
+const app = express();
 
 function verify(req, res, buf, encoding) {
-  var isAuthentic = utils.isWebhookAuthentic(
+  const isAuthentic = utils.isWebhookAuthentic(
     process.env['WEBHOOK_SECRET'],
     buf,
     req.headers['X-Button-Signature']
