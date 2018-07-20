@@ -51,7 +51,7 @@ const client = require('@button/button-client-node')('sk-XXX', {
 
 client.orders.get('btnorder-XXX')
   .then((result) => handleResult(result))
-  .catch((error) => handleError(error))
+  .catch((error) => handleError(error));
 ```
 
 The returned promise will either reject with an `Error` or resolve with the API response object.
