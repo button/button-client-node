@@ -22,6 +22,10 @@ function successResponse(obj) {
   };
 }
 
+function unexpectedResolve() {
+  return Promise.reject(new Error('Expected promise to reject.'));
+}
+
 describe('lib/#request', function() {
   before(function() {
     nock.disableNetConnect();
@@ -123,7 +127,7 @@ describe('lib/#request', function() {
       method: 'GET',
       path: path,
       hostname: hostname
-    }).catch((err) => {
+    }).then(unexpectedResolve, (err) => {
       expect(err.message).to.equal(error);
       expect(err.response).to.be.an('object');
       expect(err.response.statusCode).to.equal(404);
@@ -144,7 +148,7 @@ describe('lib/#request', function() {
       method: 'GET',
       path: path,
       hostname: hostname
-    }).catch((err) => {
+    }).then(unexpectedResolve, (err) => {
       expect(err.message).to.equal(error);
       expect(err.response).to.be.an('undefined');
       this.scope.done();
@@ -158,14 +162,14 @@ describe('lib/#request', function() {
 
     this.scope = nock('https://' + hostname + ':443')
       .get(path)
-      .socketDelay(100)
+      .delayConnection(100)
       .reply(200, successResponse({}));
 
     return timeoutRequest({
       method: 'GET',
       path: path,
       hostname: hostname
-    }).catch((err) => {
+    }).then(unexpectedResolve, (err) => {
       expect(err.message).to.equal('Request timed out');
       expect(err.response).to.be.an('undefined');
       this.scope.done();
@@ -205,7 +209,7 @@ describe('lib/#request', function() {
       method: 'GET',
       path: path,
       hostname: hostname
-    }).catch((err) => {
+    }).then(unexpectedResolve, (err) => {
       expect(err.message).to.equal('Error parsing response as JSON: not json');
       expect(err.response).to.be.an('object');
       expect(err.response.statusCode).to.equal(200);
@@ -225,7 +229,7 @@ describe('lib/#request', function() {
       method: 'GET',
       path: path,
       hostname: hostname
-    }).catch((err) => {
+    }).then(unexpectedResolve, (err) => {
       expect(err.message).to.equal('Client received an empty response from the server');
       expect(err.response).to.be.an('object');
       expect(err.response.statusCode).to.equal(200);
@@ -245,7 +249,7 @@ describe('lib/#request', function() {
       method: 'GET',
       path: path,
       hostname: hostname
-    }).catch((err) => {
+    }).then(unexpectedResolve, (err) => {
       expect(err.message).to.equal('Unknown status: ???');
       expect(err.response).to.be.an('object');
       expect(err.response.statusCode).to.equal(200);
@@ -265,7 +269,7 @@ describe('lib/#request', function() {
       method: 'GET',
       path: path,
       hostname: hostname
-    }).catch((err) => {
+    }).then(unexpectedResolve, (err) => {
       expect(err.message).to.equal('Unknown status: ???');
       expect(err.response).to.be.an('object');
       expect(err.response.statusCode).to.equal(200);
@@ -285,7 +289,7 @@ describe('lib/#request', function() {
       method: 'GET',
       path: path,
       hostname: hostname
-    }).catch((err) => {
+    }).then(unexpectedResolve, (err) => {
       expect(err.message).to.equal('Invalid response: {}');
       expect(err.response).to.be.an('object');
       expect(err.response.statusCode).to.equal(200);
@@ -305,7 +309,7 @@ describe('lib/#request', function() {
       method: 'GET',
       path: path,
       hostname: hostname
-    }).catch((err) => {
+    }).then(unexpectedResolve, (err) => {
       expect(err.message).to.equal('Invalid response: {"meta":"wat"}');
       expect(err.response).to.be.an('object');
       expect(err.response.statusCode).to.equal(200);
@@ -325,7 +329,7 @@ describe('lib/#request', function() {
       method: 'GET',
       path: path,
       hostname: hostname
-    }).catch((err) => {
+    }).then(unexpectedResolve, (err) => {
       expect(err.message).to.equal('Invalid response: {"meta":{"status":"error"}}');
       expect(err.response).to.be.an('object');
       expect(err.response.statusCode).to.equal(200);
@@ -345,7 +349,7 @@ describe('lib/#request', function() {
       method: 'GET',
       path: path,
       hostname: hostname
-    }).catch((err) => {
+    }).then(unexpectedResolve, (err) => {
       expect(err.message).to.equal('Invalid response: {"meta":{"status":"error"},"error":"wat"}');
       expect(err.response).to.be.an('object');
       expect(err.response.statusCode).to.equal(200);
