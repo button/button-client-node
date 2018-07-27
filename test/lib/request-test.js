@@ -1,6 +1,6 @@
 'use strict';
 
-const expect = require('chai').expect;
+const expect = require('expect.js');
 const nock = require('nock');
 const request = require('lib').request;
 
@@ -59,8 +59,8 @@ describe('lib/#request', function() {
       auth: user + ':',
       headers: { 'Content-Type': contentType }
     }).then((res) => {
-      expect(res.data).to.deep.equal(payload);
-      expect(res.meta).to.deep.equal({ next: '1:', previous: '3:' });
+      expect(res.data).to.eql(payload);
+      expect(res.meta).to.eql({ next: '1:', previous: '3:' });
     });
   });
 
@@ -187,7 +187,7 @@ describe('lib/#request', function() {
       path: path,
       hostname: hostname
     }).then((res) => {
-      expect(res.data).to.deep.equal(payload);
+      expect(res.data).to.eql(payload);
     });
   });
 
@@ -370,7 +370,7 @@ describe('lib/#request', function() {
       headers: { 'Content-Type': contentType }
     }).then((res) => {
       expect(res.data).to.equal(undefined);
-      expect(res.meta).to.deep.equal({ next: null, previous: null });
+      expect(res.meta).to.eql({ next: null, previous: null });
     });
   });
 
@@ -388,7 +388,7 @@ describe('lib/#request', function() {
       path: path,
       hostname: hostname
     }).then((res) => {
-      expect(res.data).to.deep.equal({});
+      expect(res.data).to.eql({});
     });
   });
 

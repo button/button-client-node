@@ -1,6 +1,6 @@
 'use strict';
 
-const expect = require('chai').expect;
+const expect = require('expect.js');
 const client = require('../../../index')('sk-XXX').merchants;
 let nock = require('nock');
 
@@ -30,7 +30,7 @@ describe('lib/resources/merchants', function() {
 
     it('gets a list of merchants with a promise', () => {
       return client.all().then((result) => {
-        expect(result.data).to.deep.equal(merchants);
+        expect(result.data).to.eql(merchants);
       });
     });
 
@@ -43,7 +43,7 @@ describe('lib/resources/merchants', function() {
         status: 'pending',
         currency: 'USD'
       }).then((result) => {
-        expect(result.data).to.deep.equal(merchants);
+        expect(result.data).to.eql(merchants);
       });
     });
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const expect = require('chai').expect;
+const expect = require('expect.js');
 const client = require('../../../index')('sk-XXX').links;
 let nock = require('nock');
 
@@ -50,7 +50,7 @@ describe('lib/resources/links', function() {
 
     it('creates a link with a promise', () => {
       return client.create(payload).then((result) => {
-        expect(result.data).to.deep.equal(link);
+        expect(result.data).to.eql(link);
       });
     });
 
@@ -97,7 +97,7 @@ describe('lib/resources/links', function() {
 
     it('gets information for a link with a promise', () => {
       return client.getInfo(payload).then((result) => {
-        expect(result.data).to.deep.equal(link);
+        expect(result.data).to.eql(link);
       });
     });
 

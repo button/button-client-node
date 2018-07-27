@@ -1,6 +1,6 @@
 'use strict';
 
-const expect = require('chai').expect;
+const expect = require('expect.js');
 const client = require('../../../index')('sk-XXX').accounts;
 let nock = require('nock');
 
@@ -30,7 +30,7 @@ describe('lib/resources/accounts', function() {
 
     it('gets a list of accounts with a promise', () => {
       return client.all().then((result) => {
-        expect(result.data).to.deep.equal(accounts);
+        expect(result.data).to.eql(accounts);
       });
     });
 
@@ -57,7 +57,7 @@ describe('lib/resources/accounts', function() {
         .reply(200, { meta: { status: 'ok' }, 'objects': transactions });
 
       return client.transactions(accountId).then((result) => {
-        expect(result.data).to.deep.equal(transactions);
+        expect(result.data).to.eql(transactions);
       });
     });
 
@@ -71,7 +71,7 @@ describe('lib/resources/accounts', function() {
         start: '2015-01-01T00:00:00Z',
         end: '2016-01-01T00:00:00Z'
       }).then((result) => {
-        expect(result.data).to.deep.equal(transactions);
+        expect(result.data).to.eql(transactions);
       });
     });
 
@@ -83,7 +83,7 @@ describe('lib/resources/accounts', function() {
       return client.transactions(accountId, {
         cursor: 'cursor'
       }).then((result) => {
-        expect(result.data).to.deep.equal(transactions);
+        expect(result.data).to.eql(transactions);
       });
     });
 

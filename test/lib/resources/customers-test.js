@@ -1,6 +1,6 @@
 'use strict';
 
-const expect = require('chai').expect;
+const expect = require('expect.js');
 const client = require('../../../index')('sk-XXX').customers;
 let nock = require('nock');
 
@@ -31,7 +31,7 @@ describe('lib/resources/customers', function() {
 
     it('gets a customer with a promise', () => {
       return client.get(customerId).then(function(result) {
-        expect(result.data).to.deep.equal(customer);
+        expect(result.data).to.eql(customer);
       });
     });
 
@@ -63,7 +63,7 @@ describe('lib/resources/customers', function() {
 
     it('creates a customer with a promise', () => {
       client.create(payload).then((result) => {
-        expect(result.data).to.deep.equal(customer);
+        expect(result.data).to.eql(customer);
       });
     });
 

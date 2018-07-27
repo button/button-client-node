@@ -1,6 +1,6 @@
 'use strict';
 
-const expect = require('chai').expect;
+const expect = require('expect.js');
 const client = require('../../../index')('sk-XXX').orders;
 let nock = require('nock');
 

@@ -1,25 +1,25 @@
 'use strict';
 
-const expect = require('chai').expect;
+const expect = require('expect.js');
 const nock = require('nock');
 const client = require('../index');
 
 describe('client', function() {
 
   it('throws if no API key is supplied', function() {
-    expect(() => client()).to.throw();
+    expect(() => client()).to.throwError();
   });
 
   it('returns a client if an API key is provided', function() {
-    expect(typeof client('sk-XXX').orders).to.equal('object');
+    expect(typeof client('sk-XXX').orders).to.eql('object');
   });
 
   it('returns a client if an API key and a config is provided', function() {
-    expect(typeof client('sk-XXX', {}).orders).to.equal('object');
+    expect(typeof client('sk-XXX', {}).orders).to.eql('object');
   });
 
   it('exposes the utils module', function() {
-    expect(typeof client.utils).to.equal('object');
+    expect(typeof client.utils).to.eql('object');
   });
 
   describe('config', function() {
@@ -40,7 +40,7 @@ describe('client', function() {
         .reply(200, { meta: { status: 'ok' }, 'object': {} });
 
       return c.get(orderId).then((results) => {
-        expect(results.data).to.deep.equal({});
+        expect(results.data).to.eql({});
       });
     });
 
@@ -52,7 +52,7 @@ describe('client', function() {
         .reply(200, { meta: { status: 'ok' }, 'object': {} });
 
       return c.get(orderId).then((results) => {
-        expect(results.data).to.deep.equal({});
+        expect(results.data).to.eql({});
       });
     });
 
@@ -64,7 +64,7 @@ describe('client', function() {
         .reply(200, { meta: { status: 'ok' }, 'object': {} });
 
       return c.get(orderId).then((results) => {
-        expect(results.data).to.deep.equal({});
+        expect(results.data).to.eql({});
       });
     });
 
@@ -76,7 +76,7 @@ describe('client', function() {
         .reply(200, { meta: { status: 'ok' }, 'object': {} });
 
       return c.get(orderId).then((results) => {
-        expect(results.data).to.deep.equal({});
+        expect(results.data).to.eql({});
       });
     });
 
@@ -91,7 +91,7 @@ describe('client', function() {
         .reply(200, { meta: { status: 'ok' }, 'object': {} });
 
       return c.get(orderId).then((results) => {
-        expect(results.data).to.deep.equal({});
+        expect(results.data).to.eql({});
       });
     });
 
