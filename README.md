@@ -50,8 +50,8 @@ const client = require('@button/button-client-node')('sk-XXX', {
 });
 
 client.orders.get('btnorder-XXX')
-  .then((result) => handleResult(result))
-  .catch((error) => handleError(error));
+  .then(handleResult)
+  .catch(handleError);
 ```
 
 The returned promise will either reject with an `Error` or resolve with the API response object.
@@ -93,8 +93,8 @@ We currently expose the following resources to manage:
 const client = require('@button/button-client-node')('sk-XXX');
 
 client.accounts.all()
-  .then((accounts) => handleAccounts(accounts))
-  .catch((error) => handleError(error));
+  .then(handleResult)
+  .catch(handleError);
 ```
 
 ##### Transactions
@@ -124,7 +124,7 @@ client.accounts.transactions('acc-1', {
   cursor: 'cXw',
   start: '2015-01-01T00:00:00Z',
   end: '2016-01-01T00:00:00Z'
-}).then(handleSuccess)
+}).then(handleResult)
   .catch(handleError);
 ```
 
@@ -151,7 +151,7 @@ client.merchants.all()
 client.merchants.all({
   status: 'pending',
   currency: 'USD'
-}).then(handleSuccess)
+}).then(handleResult)
   .catch(handleError);
 ```
 
@@ -178,7 +178,7 @@ client.orders.create({
     id: 'mycustomer-1234',
     email_sha256: hashedEmail
   }
-}).then(handleSuccess)
+}).then(handleResult)
   .catch(handleError);
 ```
 
@@ -188,7 +188,7 @@ client.orders.create({
 const client = require('@button/button-client-node')('sk-XXX');
 
 client.orders.get('btnorder-XXX')
-  .then(handleSuccess)
+  .then(handleResult)
   .catch(handleError);
 ```
 
@@ -198,7 +198,7 @@ client.orders.get('btnorder-XXX')
 const client = require('@button/button-client-node')('sk-XXX');
 
 client.orders.getByBtnRef('srctok-XXX')
-  .then(handleSuccess)
+  .then(handleResult)
   .catch(handleError);
 ```
 
@@ -208,7 +208,7 @@ client.orders.getByBtnRef('srctok-XXX')
 const client = require('@button/button-client-node')('sk-XXX');
 
 client.orders.update('btnorder-XXX', { total: 60 })
-  .then(handleSuccess)
+  .then(handleResult)
   .catch(handleError);
 ```
 
@@ -218,8 +218,8 @@ client.orders.update('btnorder-XXX', { total: 60 })
 const client = require('@button/button-client-node')('sk-XXX');
 
 client.orders.del('btnorder-XXX')
-  .then(handleSuccess)
-  .catch(handleError);;
+  .then(handleResult)
+  .catch(handleError);
 ```
 
 ### Customers
@@ -237,7 +237,7 @@ const hashedEmail = crypto.createHash('sha256')
 client.customers.create({
   id: 'customer-1234',
   email_sha256: hashedEmail
-}).then(handleSuccess)
+}).then(handleResult)
   .catch(handleError);
 ```
 
@@ -247,7 +247,7 @@ client.customers.create({
 const client = require('@button/button-client-node')('sk-XXX');
 
 client.customers.get('customer-1234')
-  .then(handleSuccess)
+  .then(handleResult)
   .catch(handleError);
 ```
 
@@ -262,7 +262,7 @@ client.links.create({
     btn_pub_ref: "my-pub-ref",
     btn_pub_user: "user-id"
   }
-}).then(handleSuccess)
+}).then(handleResult)
   .catch(handleError);
 ```
 
