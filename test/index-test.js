@@ -27,10 +27,6 @@ describe('client', function() {
       nock.disableNetConnect();
     });
 
-    afterEach(function() {
-      this.scope.done();
-    });
-
     after(function() {
       nock.enableNetConnect();
     });
@@ -45,6 +41,7 @@ describe('client', function() {
 
       return c.get(orderId).then((results) => {
         expect(results.data).to.eql({});
+        this.scope.done();
       });
     });
 
@@ -57,6 +54,7 @@ describe('client', function() {
 
       return c.get(orderId).then((results) => {
         expect(results.data).to.eql({});
+        this.scope.done();
       });
     });
 
@@ -69,6 +67,7 @@ describe('client', function() {
 
       return c.get(orderId).then((results) => {
         expect(results.data).to.eql({});
+        this.scope.done();
       });
     });
 
@@ -81,6 +80,7 @@ describe('client', function() {
 
       return c.get(orderId).then((results) => {
         expect(results.data).to.eql({});
+        this.scope.done();
       });
     });
 
@@ -96,6 +96,7 @@ describe('client', function() {
 
       return c.get(orderId).then((results) => {
         expect(results.data).to.eql({});
+        this.scope.done();
       });
     });
 

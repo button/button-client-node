@@ -40,13 +40,10 @@ describe('lib/resources/links', function() {
         .reply(200, { meta: { status: 'ok' }, 'object': this.link });
     });
 
-    afterEach(function() {
-      this.scope.done();
-    });
-
     it('creates a link with a promise', function() {
       return client.create(this.payload).then((result) => {
         expect(result.data).to.eql(this.link);
+        this.scope.done();
       });
     });
 
@@ -84,13 +81,10 @@ describe('lib/resources/links', function() {
         .reply(200, { meta: { status: 'ok' }, 'object': this.link });
     });
 
-    afterEach(function() {
-      this.scope.done();
-    });
-
     it('gets information for a link with a promise', function() {
       return client.getInfo(this.payload).then((result) => {
         expect(result.data).to.eql(this.link);
+        this.scope.done();
       });
     });
 

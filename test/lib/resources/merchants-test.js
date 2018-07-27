@@ -23,13 +23,10 @@ describe('lib/resources/merchants', function() {
         .reply(200, { meta: { status: 'ok' }, 'objects': this.merchants });
     });
 
-    afterEach(function() {
-      this.scope.done();
-    });
-
     it('gets a list of merchants with a promise', function() {
       return client.all().then((result) => {
         expect(result.data).to.eql(this.merchants);
+        this.scope.done();
       });
     });
 
@@ -43,6 +40,7 @@ describe('lib/resources/merchants', function() {
         currency: 'USD'
       }).then((result) => {
         expect(result.data).to.eql(this.merchants);
+        this.scope.done();
       });
     });
 

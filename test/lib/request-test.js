@@ -35,10 +35,6 @@ describe('lib/#request', function() {
     this.requestPromise = request(false, true);
   });
 
-  afterEach(function() {
-    this.scope.done();
-  });
-
   it('makes a basic GET request', function() {
     const payload = { a: 2 };
     const contentType = 'application/json';
@@ -60,6 +56,7 @@ describe('lib/#request', function() {
     }).then((res) => {
       expect(res.data).to.eql(payload);
       expect(res.meta).to.eql({ next: '1:', previous: '3:' });
+      this.scope.done();
     });
   });
 
@@ -84,6 +81,7 @@ describe('lib/#request', function() {
       headers: { 'Content-Type': contentType }
     }, postData).then((res) => {
       expect(res.data).to.eql(payload);
+      this.scope.done();
     });
   });
 
@@ -107,6 +105,7 @@ describe('lib/#request', function() {
       headers: { 'Content-Type': contentType }
     }).then((res) => {
       expect(res.data).to.eql(payload);
+      this.scope.done();
     });
   });
 
@@ -128,6 +127,7 @@ describe('lib/#request', function() {
       expect(err.message).to.equal(error);
       expect(err.response).to.be.an('object');
       expect(err.response.statusCode).to.equal(404);
+      this.scope.done();
     });
   });
 
@@ -147,6 +147,7 @@ describe('lib/#request', function() {
     }).catch((err) => {
       expect(err.message).to.equal(error);
       expect(err.response).to.be.an('undefined');
+      this.scope.done();
     });
   });
 
@@ -167,6 +168,7 @@ describe('lib/#request', function() {
     }).catch((err) => {
       expect(err.message).to.equal('Request timed out');
       expect(err.response).to.be.an('undefined');
+      this.scope.done();
     });
   });
 
@@ -187,6 +189,7 @@ describe('lib/#request', function() {
       hostname: hostname
     }).then((res) => {
       expect(res.data).to.eql(payload);
+      this.scope.done();
     });
   });
 
@@ -206,6 +209,7 @@ describe('lib/#request', function() {
       expect(err.message).to.equal('Error parsing response as JSON: not json');
       expect(err.response).to.be.an('object');
       expect(err.response.statusCode).to.equal(200);
+      this.scope.done();
     });
   });
 
@@ -225,6 +229,7 @@ describe('lib/#request', function() {
       expect(err.message).to.equal('Client received an empty response from the server');
       expect(err.response).to.be.an('object');
       expect(err.response.statusCode).to.equal(200);
+      this.scope.done();
     });
   });
 
@@ -244,6 +249,7 @@ describe('lib/#request', function() {
       expect(err.message).to.equal('Unknown status: ???');
       expect(err.response).to.be.an('object');
       expect(err.response.statusCode).to.equal(200);
+      this.scope.done();
     });
   });
 
@@ -263,6 +269,7 @@ describe('lib/#request', function() {
       expect(err.message).to.equal('Unknown status: ???');
       expect(err.response).to.be.an('object');
       expect(err.response.statusCode).to.equal(200);
+      this.scope.done();
     });
   });
 
@@ -282,6 +289,7 @@ describe('lib/#request', function() {
       expect(err.message).to.equal('Invalid response: {}');
       expect(err.response).to.be.an('object');
       expect(err.response.statusCode).to.equal(200);
+      this.scope.done();
     });
   });
 
@@ -301,6 +309,7 @@ describe('lib/#request', function() {
       expect(err.message).to.equal('Invalid response: {"meta":"wat"}');
       expect(err.response).to.be.an('object');
       expect(err.response.statusCode).to.equal(200);
+      this.scope.done();
     });
   });
 
@@ -320,6 +329,7 @@ describe('lib/#request', function() {
       expect(err.message).to.equal('Invalid response: {"meta":{"status":"error"}}');
       expect(err.response).to.be.an('object');
       expect(err.response.statusCode).to.equal(200);
+      this.scope.done();
     });
   });
 
@@ -339,6 +349,7 @@ describe('lib/#request', function() {
       expect(err.message).to.equal('Invalid response: {"meta":{"status":"error"},"error":"wat"}');
       expect(err.response).to.be.an('object');
       expect(err.response.statusCode).to.equal(200);
+      this.scope.done();
     });
   });
 
@@ -370,6 +381,7 @@ describe('lib/#request', function() {
     }).then((res) => {
       expect(res.data).to.equal(undefined);
       expect(res.meta).to.eql({ next: null, previous: null });
+      this.scope.done();
     });
   });
 
@@ -388,6 +400,7 @@ describe('lib/#request', function() {
       hostname: hostname
     }).then((res) => {
       expect(res.data).to.eql({});
+      this.scope.done();
     });
   });
 

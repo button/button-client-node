@@ -23,13 +23,10 @@ describe('lib/resources/orders', function() {
         .reply(200, { meta: { status: 'ok' }, 'object': this.order });
     });
 
-    afterEach(function() { 
-      this.scope.done();
-    });
-
     it('gets an order with a promise', function() {
       return client.get(this.orderId).then((result) => {
         expect(result.data).to.eql(this.order);
+        this.scope.done();
       });
     });
 
@@ -44,13 +41,10 @@ describe('lib/resources/orders', function() {
         .reply(200, { meta: { status: 'ok' }, 'objects': [this.order] });
     });
 
-    afterEach(function() {
-      this.scope.done();
-    });
-
     it('gets an order with a promise', function() {
       return client.getByBtnRef(this.btnRef).then((result) => {
         expect(result.data[0]).to.eql(this.order);
+        this.scope.done();
       });
     });
 
@@ -91,13 +85,10 @@ describe('lib/resources/orders', function() {
         .reply(200, { meta: { status: 'ok' }, 'object': this.order });
     });
 
-    afterEach(function() {
-      this.scope.done();
-    });
-
     it('creates an order with a promise', function() {
       return client.create(this.payload).then((result) => {
         expect(result.data).to.eql(this.order);
+        this.scope.done();
       });
     });
 
@@ -129,13 +120,10 @@ describe('lib/resources/orders', function() {
         .reply(200, { meta: { status: 'ok' }, 'object': this.order });
     });
 
-    afterEach(function() {
-      this.scope.done();
-    });
-
     it('updates an order with a promise', function() {
       return client.update(this.orderId, this.payload).then((result) => {
         expect(result.data).to.eql(this.order);
+        this.scope.done();
       });
     });
 
@@ -150,13 +138,10 @@ describe('lib/resources/orders', function() {
         .reply(200, { meta: { status: 'ok' }, 'object': null });
     });
 
-    afterEach(function() {
-      this.scope.done();
-    });
-
     it('deletes an order with a promise', function() {
       return client.del(this.orderId).then((result) => {
         expect(result.data).to.eql(null);
+        this.scope.done();
       });
     });
 

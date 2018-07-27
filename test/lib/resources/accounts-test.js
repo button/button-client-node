@@ -23,16 +23,12 @@ describe('lib/resources/accounts', function() {
         .reply(200, { meta: { status: 'ok' }, 'objects': this.accounts });
     });
 
-    afterEach(function() {
-      this.scope.done();
-    });
-
     it('gets a list of accounts with a promise', function() {
       return client.all().then((result) => {
         expect(result.data).to.eql(this.accounts);
+        this.scope.done();
       });
     });
-
   });
 
   describe('#transactions', function() {
@@ -44,10 +40,6 @@ describe('lib/resources/accounts', function() {
       ];
     });
 
-    afterEach(function() {
-      this.scope.done();
-    });
-
     it('gets a list of transactions with a promise', function() {
       this.scope = nock('https://api.usebutton.com:443')
         .get('/v1/affiliation/accounts/' + this.accountId + '/transactions')
@@ -55,6 +47,7 @@ describe('lib/resources/accounts', function() {
 
       return client.transactions(this.accountId).then((result) => {
         expect(result.data).to.eql(this.transactions);
+        this.scope.done();
       });
     });
 
@@ -69,6 +62,7 @@ describe('lib/resources/accounts', function() {
         end: '2016-01-01T00:00:00Z'
       }).then((result) => {
         expect(result.data).to.eql(this.transactions);
+        this.scope.done();
       });
     });
 
@@ -81,6 +75,7 @@ describe('lib/resources/accounts', function() {
         cursor: 'cursor'
       }).then((result) => {
         expect(result.data).to.eql(this.transactions);
+        this.scope.done();
       });
     });
 

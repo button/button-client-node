@@ -23,13 +23,10 @@ describe('lib/resources/customers', function() {
         .reply(200, { meta: { status: 'ok' }, 'object': this.customer });
     });
 
-    afterEach(function() {
-      this.scope.done();
-    });
-
     it('gets a customer with a promise', function() {
       return client.get(this.customerId).then((result) => {
         expect(result.data).to.eql(this.customer);
+        this.scope.done();
       });
     });
 
@@ -52,13 +49,10 @@ describe('lib/resources/customers', function() {
         .reply(200, { meta: { status: 'ok' }, 'object': this.customer });
     });
 
-    afterEach(function() {
-      this.scope.done();
-    });
-
     it('creates a customer with a promise', function() {
       return client.create(this.payload).then((result) => {
         expect(result.data).to.eql(this.customer);
+        this.scope.done();
       });
     });
 
