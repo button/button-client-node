@@ -14,26 +14,20 @@ describe('lib/resources/links', function() {
     nock.enableNetConnect();
   });
 
-  describe('#create', function() {
-    let url;
-    let experience;
-    let payload;
-    let link;
-    let scope;
-
-    beforeEach(function() {
-      url = 'https://www.jet.com/';
-      experience = {
+  describe('#create', () => {
+    beforeEach(() => {
+      this.url = 'https://www.jet.com/';
+      this.experience = {
         btn_pub_ref: 'my-pub-ref',
         btn_pub_user: 'user-id'
       };
 
-      payload = {
-        url: url,
-        experience: experience
+      this.payload = {
+        url: this.url,
+        experience: this.experience
       };
 
-      link = {
+      this.link = {
         merchant_id: 'org-XXX',
         affiliate: null,
         links: {
@@ -41,35 +35,30 @@ describe('lib/resources/links', function() {
         }
       };
 
-      scope = nock('https://api.usebutton.com:443')
-        .post('/v1/links', payload)
-        .reply(200, { meta: { status: 'ok' }, 'object': link });
+      this.scope = nock('https://api.usebutton.com:443')
+        .post('/v1/links', this.payload)
+        .reply(200, { meta: { status: 'ok' }, 'object': this.link });
     });
 
-    afterEach(() => scope.done());
+    afterEach(() => this.scope.done());
 
     it('creates a link with a promise', () => {
-      return client.create(payload).then((result) => {
-        expect(result.data).to.eql(link);
+      return client.create(this.payload).then((result) => {
+        expect(result.data).to.eql(this.link);
       });
     });
 
   });
 
-  describe('#getInfo', function() {
-    let url;
-    let payload;
-    let link;
-    let scope;
+  describe('#getInfo', () => {
+    beforeEach(() => {
+      this.url = 'https://www.jet.com/';
 
-    beforeEach(function() {
-      url = 'https://www.jet.com/';
-
-      payload = {
-        url: url
+      this.payload = {
+        url: this.url
       };
 
-      link = {
+      this.link = {
         organization_id: 'org-XXX',
         approved: true,
         ios_support: {
@@ -88,16 +77,16 @@ describe('lib/resources/links', function() {
         }
       };
 
-      scope = nock('https://api.usebutton.com:443')
-        .post('/v1/links/info', payload)
-        .reply(200, { meta: { status: 'ok' }, 'object': link });
+      this.scope = nock('https://api.usebutton.com:443')
+        .post('/v1/links/info', this.payload)
+        .reply(200, { meta: { status: 'ok' }, 'object': this.link });
     });
 
-    afterEach(() => scope.done());
+    afterEach(() => this.scope.done());
 
     it('gets information for a link with a promise', () => {
-      return client.getInfo(payload).then((result) => {
-        expect(result.data).to.eql(link);
+      return client.getInfo(this.payload).then((result) => {
+        expect(result.data).to.eql(this.link);
       });
     });
 

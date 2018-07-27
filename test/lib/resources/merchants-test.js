@@ -15,35 +15,32 @@ describe('lib/resources/merchants', function() {
     nock.enableNetConnect();
   });
 
-  describe('#all', function() {
-    let merchants;
-    let scope;
-
-    beforeEach(function() {
-      merchants = [{ 'id': 'org-1' }];
-      scope = nock('https://api.usebutton.com:443')
+  describe('#all', () => {
+    beforeEach(() => {
+      this.merchants = [{ 'id': 'org-1' }];
+      this.scope = nock('https://api.usebutton.com:443')
         .get('/v1/merchants')
-        .reply(200, { meta: { status: 'ok' }, 'objects': merchants });
+        .reply(200, { meta: { status: 'ok' }, 'objects': this.merchants });
     });
 
-    afterEach(() => scope.done());
+    afterEach(() => this.scope.done());
 
     it('gets a list of merchants with a promise', () => {
       return client.all().then((result) => {
-        expect(result.data).to.eql(merchants);
+        expect(result.data).to.eql(this.merchants);
       });
     });
 
     it('gets a list of merchants with query params', () => {
-      scope = nock('https://api.usebutton.com:443')
+      this.scope = nock('https://api.usebutton.com:443')
         .get('/v1/merchants?status=pending&currency=USD')
-        .reply(200, { meta: { status: 'ok' }, 'objects': merchants });
+        .reply(200, { meta: { status: 'ok' }, 'objects': this.merchants });
 
       return client.all({
         status: 'pending',
         currency: 'USD'
       }).then((result) => {
-        expect(result.data).to.eql(merchants);
+        expect(result.data).to.eql(this.merchants);
       });
     });
 

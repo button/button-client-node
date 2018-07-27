@@ -22,23 +22,20 @@ function successResponse(obj) {
   };
 }
 
-describe('lib/#request', function() {
-  let scope;
-  let requestPromise;
-
-  before(function() {
+describe('lib/#request', () => {
+  before(() => {
     nock.disableNetConnect();
   });
 
-  after(function() {
+  after(() => {
     nock.enableNetConnect();
   });
 
   beforeEach(() => {
-    requestPromise = request(false, true);
+    this.requestPromise = request(false, true);
   });
 
-  afterEach(() => scope.done());
+  afterEach(() => this.scope.done());
 
   it('makes a basic GET request', () => {
     const payload = { a: 2 };
@@ -47,12 +44,12 @@ describe('lib/#request', function() {
     const hostname = 'api.usebutton.com';
     const user = 'sk-XXX';
 
-    scope = nock('https://' + hostname + ':443', { reqheaders: { 'content-type': contentType } })
+    this.scope = nock('https://' + hostname + ':443', { reqheaders: { 'content-type': contentType } })
       .get(path)
       .basicAuth({ user: user, pass: '' })
       .reply(200, successResponse(payload));
 
-    return requestPromise({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname,
@@ -72,12 +69,12 @@ describe('lib/#request', function() {
     const hostname = 'api.usebutton.com';
     const user = 'sk-XXX';
 
-    scope = nock('https://' + hostname + ':443', { reqheaders: { 'content-type': contentType } })
+    this.scope = nock('https://' + hostname + ':443', { reqheaders: { 'content-type': contentType } })
       .post(path, postData)
       .basicAuth({ user: user, pass: '' })
       .reply(200, successResponse(payload));
 
-    return requestPromise({
+    return this.requestPromise({
       method: 'POST',
       path: path,
       hostname: hostname,
@@ -95,12 +92,12 @@ describe('lib/#request', function() {
     const hostname = 'api.usebutton.com';
     const user = 'sk-XXX';
 
-    scope = nock('https://' + hostname + ':443', { reqheaders: { 'content-type': contentType } })
+    this.scope = nock('https://' + hostname + ':443', { reqheaders: { 'content-type': contentType } })
       .delete(path)
       .basicAuth({ user: user, pass: '' })
       .reply(200, successResponse(payload));
 
-    return requestPromise({
+    return this.requestPromise({
       method: 'DELETE',
       path: path,
       hostname: hostname,
@@ -117,11 +114,11 @@ describe('lib/#request', function() {
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
 
-    scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
       .reply(404, errorResponse(error));
 
-    return requestPromise({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname
@@ -137,11 +134,11 @@ describe('lib/#request', function() {
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
 
-    scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
       .replyWithError(error);
 
-    return requestPromise({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname
@@ -156,7 +153,7 @@ describe('lib/#request', function() {
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
 
-    scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
       .socketDelay(100)
       .reply(200, successResponse({}));
@@ -177,7 +174,7 @@ describe('lib/#request', function() {
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
 
-    scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
       .socketDelay(100)
       .reply(200, successResponse(payload));
@@ -195,11 +192,11 @@ describe('lib/#request', function() {
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
 
-    scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
       .reply(200, 'not json');
 
-    return requestPromise({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname
@@ -214,11 +211,11 @@ describe('lib/#request', function() {
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
 
-    scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
       .reply(200, '');
 
-    return requestPromise({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname
@@ -233,11 +230,11 @@ describe('lib/#request', function() {
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
 
-    scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
       .reply(200, { meta: { status: '???' } });
 
-    return requestPromise({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname
@@ -252,11 +249,11 @@ describe('lib/#request', function() {
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
 
-    scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
       .reply(200, { meta: { status: '???' } });
 
-    return requestPromise({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname
@@ -271,11 +268,11 @@ describe('lib/#request', function() {
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
 
-    scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
       .reply(200, {});
 
-    return requestPromise({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname
@@ -290,11 +287,11 @@ describe('lib/#request', function() {
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
 
-    scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
       .reply(200, { meta: 'wat' });
 
-    return requestPromise({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname
@@ -309,11 +306,11 @@ describe('lib/#request', function() {
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
 
-    scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
       .reply(200, { meta: { status: 'error' } });
 
-    return requestPromise({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname
@@ -328,11 +325,11 @@ describe('lib/#request', function() {
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
 
-    scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
       .reply(200, { meta: { status: 'error' }, error: 'wat' });
 
-    return requestPromise({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname
@@ -357,12 +354,12 @@ describe('lib/#request', function() {
     const hostname = 'api.usebutton.com';
     const user = 'sk-XXX';
 
-    scope = nock('https://' + hostname + ':443', { reqheaders: { 'content-type': contentType } })
+    this.scope = nock('https://' + hostname + ':443', { reqheaders: { 'content-type': contentType } })
       .get(path)
       .basicAuth({ user: user, pass: '' })
       .reply(200, payload);
 
-    return requestPromise({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname,
@@ -379,7 +376,7 @@ describe('lib/#request', function() {
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
 
-    scope = nock('http://' + hostname + ':80')
+    this.scope = nock('http://' + hostname + ':80')
       .get(path)
       .reply(200, successResponse({}));
 

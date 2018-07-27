@@ -15,55 +15,46 @@ describe('lib/resources/customers', function() {
   });
 
   describe('#get', function() {
-    let customerId;
-    let customer;
-    let scope;
-
-    beforeEach(function() {
-      customerId = 'customer-XXX';
-      customer = { 'customer_id': 'customer-XXX' };
-      scope = nock('https://api.usebutton.com:443')
-        .get('/v1/customers/' + customerId)
-        .reply(200, { meta: { status: 'ok' }, 'object': customer });
+    beforeEach(() => {
+      this.customerId = 'customer-XXX';
+      this.customer = { 'customer_id': 'customer-XXX' };
+      this.scope = nock('https://api.usebutton.com:443')
+        .get('/v1/customers/' + this.customerId)
+        .reply(200, { meta: { status: 'ok' }, 'object': this.customer });
     });
 
-    afterEach(() => scope.done());
+    afterEach(() => this.scope.done());
 
     it('gets a customer with a promise', () => {
-      return client.get(customerId).then(function(result) {
-        expect(result.data).to.eql(customer);
+      return client.get(this.customerId).then((result) => {
+        expect(result.data).to.eql(this.customer);
       });
     });
 
   });
 
   describe('#create', function() {
-    let customerId;
-    let customer;
-    let payload;
-    let scope;
+    beforeEach(() => {
+      this.customerId = 'customer-1234';
 
-    beforeEach(function() {
-      customerId = 'customer-1234';
-
-      payload = {
-        customer_id: customerId
+      this.payload = {
+        customer_id: this.customerId
       };
 
-      customerId = {
+      this.customer = {
         id: 'customer-1234'
       };
 
-      scope = nock('https://api.usebutton.com:443')
-        .post('/v1/customers', payload)
-        .reply(200, { meta: { status: 'ok' }, 'object': customer });
+      this.scope = nock('https://api.usebutton.com:443')
+        .post('/v1/customers', this.payload)
+        .reply(200, { meta: { status: 'ok' }, 'object': this.customer });
     });
 
-    afterEach(() => scope.done());
+    afterEach(() => this.scope.done());
 
     it('creates a customer with a promise', () => {
-      client.create(payload).then((result) => {
-        expect(result.data).to.eql(customer);
+      client.create(this.payload).then((result) => {
+        expect(result.data).to.eql(this.customer);
       });
     });
 

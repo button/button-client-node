@@ -14,65 +14,53 @@ describe('lib/resources/orders', function() {
     nock.enableNetConnect();
   });
 
-  describe('#get', function() {
-    let orderId;
-    let order;
-    let scope;
-
-    beforeEach(function() {
-      orderId = 'btnorder-XXX';
-      order = { 'button_order_id': 'btnorder-XXX' };
-      scope = nock('https://api.usebutton.com:443')
-        .get('/v1/order/' + orderId)
-        .reply(200, { meta: { status: 'ok' }, 'object': order });
+  describe('#get', () => {
+    beforeEach(() => {
+      this.orderId = 'btnorder-XXX';
+      this.order = { 'button_order_id': 'btnorder-XXX' };
+      this.scope = nock('https://api.usebutton.com:443')
+        .get('/v1/order/' + this.orderId)
+        .reply(200, { meta: { status: 'ok' }, 'object': this.order });
     });
 
-    afterEach(() => scope.done());
+    afterEach(() => this.scope.done());
 
     it('gets an order with a promise', () => {
-      return client.get(orderId).then((result) => {
-        expect(result.data).to.eql(order);
+      return client.get(this.orderId).then((result) => {
+        expect(result.data).to.eql(this.order);
       });
     });
 
   });
 
-  describe('#getByBtnRef', function() {
-    let btnRef;
-    let order;
-    let scope;
-
-    beforeEach(function() {
-      btnRef = 'srctok-XXX';
-      order = { 'button_order_id': 'srctok-XXX' };
-      scope = nock('https://api.usebutton.com:443')
-        .get('/v1/order/btn-ref/' + btnRef)
-        .reply(200, { meta: { status: 'ok' }, 'objects': [order] });
+  describe('#getByBtnRef', () => {
+    beforeEach(() => {
+      this.btnRef = 'srctok-XXX';
+      this.order = { 'button_order_id': 'srctok-XXX' };
+      this.scope = nock('https://api.usebutton.com:443')
+        .get('/v1/order/btn-ref/' + this.btnRef)
+        .reply(200, { meta: { status: 'ok' }, 'objects': [this.order] });
     });
 
-    afterEach(() => scope.done());
+    afterEach(() => this.scope.done());
 
     it('gets an order with a promise', () => {
-      return client.getByBtnRef(btnRef).then((result) => {
-        expect(result.data[0]).to.eql(order);
+      return client.getByBtnRef(this.btnRef).then((result) => {
+        expect(result.data[0]).to.eql(this.order);
       });
     });
 
   });
 
-  describe('#create', function() {
-    let payload;
-    let order;
-    let scope;
-
-    beforeEach(function() {
+  describe('#create', () => {
+    beforeEach(() => {
       const total = 50;
       const currency = 'USD';
       const orderId = '1989';
       const purchaseDate = '2017-07-25T08:23:52Z';
       const finalizationDate = '2017-08-02T19:26:08Z';
 
-      payload = {
+      this.payload = {
         total: total,
         currency: currency,
         order_id: orderId,
@@ -80,7 +68,7 @@ describe('lib/resources/orders', function() {
         finalization_date: finalizationDate
       };
 
-      order = {
+      this.order = {
         button_order_id: 'btnorder-XXX',
         total: total,
         currency: currency,
@@ -94,40 +82,35 @@ describe('lib/resources/orders', function() {
         finalization_date: finalizationDate
       };
 
-      scope = nock('https://api.usebutton.com:443')
-        .post('/v1/order', payload)
-        .reply(200, { meta: { status: 'ok' }, 'object': order });
+      this.scope = nock('https://api.usebutton.com:443')
+        .post('/v1/order', this.payload)
+        .reply(200, { meta: { status: 'ok' }, 'object': this.order });
     });
 
-    afterEach(() => scope.done());
+    afterEach(() => this.scope.done());
 
     it('creates an order with a promise', () => {
-      return client.create(payload).then((result) => {
-        expect(result.data).to.eql(order);
+      return client.create(this.payload).then((result) => {
+        expect(result.data).to.eql(this.order);
       });
     });
 
   });
 
-  describe('#update', function() {
-    let payload;
-    let order;
-    let orderId;
-    let scope;
-
-    beforeEach(function() {
+  describe('#update', () => {
+    beforeEach(() => {
       const total = 60;
-      orderId = '1989';
+      this.orderId = '1989';
 
-      payload = {
+      this.payload = {
         total: total,
-        order_id: orderId
+        order_id: this.orderId
       };
 
-      order = {
+      this.order = {
         button_order_id: 'btnorder-XXX',
         total: total,
-        order_id: orderId,
+        order_id: this.orderId,
         btn_ref: null,
         session_id: null,
         ifa: null,
@@ -135,37 +118,34 @@ describe('lib/resources/orders', function() {
         status: 'open'
       };
 
-      scope = nock('https://api.usebutton.com:443')
-        .post('/v1/order/' + orderId, payload)
-        .reply(200, { meta: { status: 'ok' }, 'object': order });
+      this.scope = nock('https://api.usebutton.com:443')
+        .post('/v1/order/' + this.orderId, this.payload)
+        .reply(200, { meta: { status: 'ok' }, 'object': this.order });
     });
 
-    afterEach(() => scope.done());
+    afterEach(() => this.scope.done());
 
     it('updates an order with a promise', () => {
-      return client.update(orderId, payload).then((result) => {
-        expect(result.data).to.eql(order);
+      return client.update(this.orderId, this.payload).then((result) => {
+        expect(result.data).to.eql(this.order);
       });
     });
 
   });
 
-  describe('#del', function() {
-    let orderId;
-    let scope;
+  describe('#del', () => {
+    beforeEach(() => {
+      this.orderId = '1989';
 
-    beforeEach(function() {
-      orderId = '1989';
-
-      scope = nock('https://api.usebutton.com:443')
-        .delete('/v1/order/' + orderId)
+      this.scope = nock('https://api.usebutton.com:443')
+        .delete('/v1/order/' + this.orderId)
         .reply(200, { meta: { status: 'ok' }, 'object': null });
     });
 
-    afterEach(() => scope.done());
+    afterEach(() => this.scope.done());
 
     it('deletes an order with a promise', () => {
-      return client.del(orderId).then((result) => {
+      return client.del(this.orderId).then((result) => {
         expect(result.data).to.eql(null);
       });
     });

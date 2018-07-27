@@ -23,18 +23,16 @@ describe('client', function() {
   });
 
   describe('config', function() {
-    let scope;
-
     before(() => nock.disableNetConnect());
 
-    afterEach(() => scope.done());
+    afterEach(() => this.scope.done());
 
     after(() => nock.enableNetConnect());
 
     it('defaults config options', () => {
       let c = client('sk-XXX').orders;
       let orderId = 'btnorder-XXX';
-      scope = nock('https://api.usebutton.com:443', {
+      this.scope = nock('https://api.usebutton.com:443', {
         badheaders: ['x-button-api-version']
       }).get('/v1/order/' + orderId)
         .reply(200, { meta: { status: 'ok' }, 'object': {} });
@@ -47,7 +45,7 @@ describe('client', function() {
     it('makes insecure requests', () => {
       let c = client('sk-XXX', { secure: false }).orders;
       let orderId = 'btnorder-XXX';
-      scope = nock('http://api.usebutton.com:80')
+      this.scope = nock('http://api.usebutton.com:80')
         .get('/v1/order/' + orderId)
         .reply(200, { meta: { status: 'ok' }, 'object': {} });
 
@@ -59,7 +57,7 @@ describe('client', function() {
     it('overrides the hostname', () => {
       let c = client('sk-XXX', { hostname: 'staging.usebutton.com' }).orders;
       let orderId = 'btnorder-XXX';
-      scope = nock('https://staging.usebutton.com:443')
+      this.scope = nock('https://staging.usebutton.com:443')
         .get('/v1/order/' + orderId)
         .reply(200, { meta: { status: 'ok' }, 'object': {} });
 
@@ -71,7 +69,7 @@ describe('client', function() {
     it('overrides the port', () => {
       let c = client('sk-XXX', { port: 1989 }).orders;
       let orderId = 'btnorder-XXX';
-      scope = nock('https://api.usebutton.com:1989')
+      this.scope = nock('https://api.usebutton.com:1989')
         .get('/v1/order/' + orderId)
         .reply(200, { meta: { status: 'ok' }, 'object': {} });
 
@@ -83,7 +81,7 @@ describe('client', function() {
     it('sets the API Version', () => {
       let c = client('sk-XXX', { apiVersion: '2017-01-01' }).orders;
       let orderId = 'btnorder-XXX';
-      scope = nock('https://api.usebutton.com', {
+      this.scope = nock('https://api.usebutton.com', {
         reqheaders: {
           'x-button-api-version': '2017-01-01'
         }
