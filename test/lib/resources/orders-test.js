@@ -14,8 +14,8 @@ describe('lib/resources/orders', function() {
     nock.enableNetConnect();
   });
 
-  describe('#get', () => {
-    beforeEach(() => {
+  describe('#get', function() {
+    beforeEach(function() {
       this.orderId = 'btnorder-XXX';
       this.order = { 'button_order_id': 'btnorder-XXX' };
       this.scope = nock('https://api.usebutton.com:443')
@@ -23,9 +23,11 @@ describe('lib/resources/orders', function() {
         .reply(200, { meta: { status: 'ok' }, 'object': this.order });
     });
 
-    afterEach(() => this.scope.done());
+    afterEach(function() { 
+      this.scope.done();
+    });
 
-    it('gets an order with a promise', () => {
+    it('gets an order with a promise', function() {
       return client.get(this.orderId).then((result) => {
         expect(result.data).to.eql(this.order);
       });
@@ -33,8 +35,8 @@ describe('lib/resources/orders', function() {
 
   });
 
-  describe('#getByBtnRef', () => {
-    beforeEach(() => {
+  describe('#getByBtnRef', function() {
+    beforeEach(function() {
       this.btnRef = 'srctok-XXX';
       this.order = { 'button_order_id': 'srctok-XXX' };
       this.scope = nock('https://api.usebutton.com:443')
@@ -42,9 +44,11 @@ describe('lib/resources/orders', function() {
         .reply(200, { meta: { status: 'ok' }, 'objects': [this.order] });
     });
 
-    afterEach(() => this.scope.done());
+    afterEach(function() {
+      this.scope.done();
+    });
 
-    it('gets an order with a promise', () => {
+    it('gets an order with a promise', function() {
       return client.getByBtnRef(this.btnRef).then((result) => {
         expect(result.data[0]).to.eql(this.order);
       });
@@ -52,8 +56,8 @@ describe('lib/resources/orders', function() {
 
   });
 
-  describe('#create', () => {
-    beforeEach(() => {
+  describe('#create', function() {
+    beforeEach(function() {
       const total = 50;
       const currency = 'USD';
       const orderId = '1989';
@@ -87,9 +91,11 @@ describe('lib/resources/orders', function() {
         .reply(200, { meta: { status: 'ok' }, 'object': this.order });
     });
 
-    afterEach(() => this.scope.done());
+    afterEach(function() {
+      this.scope.done();
+    });
 
-    it('creates an order with a promise', () => {
+    it('creates an order with a promise', function() {
       return client.create(this.payload).then((result) => {
         expect(result.data).to.eql(this.order);
       });
@@ -97,8 +103,8 @@ describe('lib/resources/orders', function() {
 
   });
 
-  describe('#update', () => {
-    beforeEach(() => {
+  describe('#update', function() {
+    beforeEach(function() {
       const total = 60;
       this.orderId = '1989';
 
@@ -123,9 +129,11 @@ describe('lib/resources/orders', function() {
         .reply(200, { meta: { status: 'ok' }, 'object': this.order });
     });
 
-    afterEach(() => this.scope.done());
+    afterEach(function() {
+      this.scope.done();
+    });
 
-    it('updates an order with a promise', () => {
+    it('updates an order with a promise', function() {
       return client.update(this.orderId, this.payload).then((result) => {
         expect(result.data).to.eql(this.order);
       });
@@ -133,8 +141,8 @@ describe('lib/resources/orders', function() {
 
   });
 
-  describe('#del', () => {
-    beforeEach(() => {
+  describe('#del', function() {
+    beforeEach(function() {
       this.orderId = '1989';
 
       this.scope = nock('https://api.usebutton.com:443')
@@ -142,9 +150,11 @@ describe('lib/resources/orders', function() {
         .reply(200, { meta: { status: 'ok' }, 'object': null });
     });
 
-    afterEach(() => this.scope.done());
+    afterEach(function() {
+      this.scope.done();
+    });
 
-    it('deletes an order with a promise', () => {
+    it('deletes an order with a promise', function() {
       return client.del(this.orderId).then((result) => {
         expect(result.data).to.eql(null);
       });

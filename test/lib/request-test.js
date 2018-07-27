@@ -22,22 +22,24 @@ function successResponse(obj) {
   };
 }
 
-describe('lib/#request', () => {
-  before(() => {
+describe('lib/#request', function() {
+  before(function() {
     nock.disableNetConnect();
   });
 
-  after(() => {
+  after(function() {
     nock.enableNetConnect();
   });
 
-  beforeEach(() => {
+  beforeEach(function() {
     this.requestPromise = request(false, true);
   });
 
-  afterEach(() => this.scope.done());
+  afterEach(function() {
+    this.scope.done();
+  });
 
-  it('makes a basic GET request', () => {
+  it('makes a basic GET request', function() {
     const payload = { a: 2 };
     const contentType = 'application/json';
     const path = '/bleep/bloop';
@@ -61,7 +63,7 @@ describe('lib/#request', () => {
     });
   });
 
-  it('makes a POST request', () => {
+  it('makes a POST request', function() {
     const postData = { b: 3 };
     const payload = { a: 2 };
     const contentType = 'application/json';
@@ -85,7 +87,7 @@ describe('lib/#request', () => {
     });
   });
 
-  it('makes a DELETE request', () => {
+  it('makes a DELETE request', function() {
     const payload = null;
     const contentType = 'application/json';
     const path = '/bleep/bloop';
@@ -109,7 +111,7 @@ describe('lib/#request', () => {
   });
 
 
-  it('handles server defined errors', () => {
+  it('handles server defined errors', function() {
     const error = 'bloop';
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
@@ -129,7 +131,7 @@ describe('lib/#request', () => {
     });
   });
 
-  it('handles unexpected errors', () => {
+  it('handles unexpected errors', function() {
     const error = 'bloop';
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
@@ -148,7 +150,7 @@ describe('lib/#request', () => {
     });
   });
 
-  it('handles timeout errors', () => {
+  it('handles timeout errors', function() {
     const timeoutRequest = request(10, true);
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
@@ -168,7 +170,7 @@ describe('lib/#request', () => {
     });
   });
 
-  it('succeeds if faster than the timeout', () => {
+  it('succeeds if faster than the timeout', function() {
     const payload = {};
     const timeoutRequest = request(1000, true);
     const path = '/bleep/bloop';
@@ -188,7 +190,7 @@ describe('lib/#request', () => {
     });
   });
 
-  it('handles invalid JSON errors', () => {
+  it('handles invalid JSON errors', function() {
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
 
@@ -207,7 +209,7 @@ describe('lib/#request', () => {
     });
   });
 
-  it('handles empty responses', () => {
+  it('handles empty responses', function() {
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
 
@@ -226,7 +228,7 @@ describe('lib/#request', () => {
     });
   });
 
-  it('handles unknown statuses', () => {
+  it('handles unknown statuses', function() {
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
 
@@ -245,7 +247,7 @@ describe('lib/#request', () => {
     });
   });
 
-  it('handles unknown statuses', () => {
+  it('handles unknown statuses', function() {
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
 
@@ -264,7 +266,7 @@ describe('lib/#request', () => {
     });
   });
 
-  it('handles response payloads without meta', () => {
+  it('handles response payloads without meta', function() {
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
 
@@ -283,7 +285,7 @@ describe('lib/#request', () => {
     });
   });
 
-  it('handles response payloads with an invalid meta', () => {
+  it('handles response payloads with an invalid meta', function() {
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
 
@@ -302,7 +304,7 @@ describe('lib/#request', () => {
     });
   });
 
-  it('handles response payloads without an error', () => {
+  it('handles response payloads without an error', function() {
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
 
@@ -321,7 +323,7 @@ describe('lib/#request', () => {
     });
   });
 
-  it('handles response payloads with an invalid error', () => {
+  it('handles response payloads with an invalid error', function() {
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';
 
@@ -340,7 +342,7 @@ describe('lib/#request', () => {
     });
   });
 
-  it('handles invalid next / previous meta attributes', () => {
+  it('handles invalid next / previous meta attributes', function() {
     const payload = {
       meta: {
         status: 'ok',
@@ -371,7 +373,7 @@ describe('lib/#request', () => {
     });
   });
 
-  it('makes insecure requests', () => {
+  it('makes insecure requests', function() {
     const insecureRequest = request(false, false);
     const path = '/bleep/bloop';
     const hostname = 'api.usebutton.com';

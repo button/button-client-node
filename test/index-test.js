@@ -23,13 +23,19 @@ describe('client', function() {
   });
 
   describe('config', function() {
-    before(() => nock.disableNetConnect());
+    before(function() {
+      nock.disableNetConnect();
+    });
 
-    afterEach(() => this.scope.done());
+    afterEach(function() {
+      this.scope.done();
+    });
 
-    after(() => nock.enableNetConnect());
+    after(function() {
+      nock.enableNetConnect();
+    });
 
-    it('defaults config options', () => {
+    it('defaults config options', function() {
       let c = client('sk-XXX').orders;
       let orderId = 'btnorder-XXX';
       this.scope = nock('https://api.usebutton.com:443', {
@@ -42,7 +48,7 @@ describe('client', function() {
       });
     });
 
-    it('makes insecure requests', () => {
+    it('makes insecure requests', function() {
       let c = client('sk-XXX', { secure: false }).orders;
       let orderId = 'btnorder-XXX';
       this.scope = nock('http://api.usebutton.com:80')
@@ -54,7 +60,7 @@ describe('client', function() {
       });
     });
 
-    it('overrides the hostname', () => {
+    it('overrides the hostname', function() {
       let c = client('sk-XXX', { hostname: 'staging.usebutton.com' }).orders;
       let orderId = 'btnorder-XXX';
       this.scope = nock('https://staging.usebutton.com:443')
@@ -66,7 +72,7 @@ describe('client', function() {
       });
     });
 
-    it('overrides the port', () => {
+    it('overrides the port', function() {
       let c = client('sk-XXX', { port: 1989 }).orders;
       let orderId = 'btnorder-XXX';
       this.scope = nock('https://api.usebutton.com:1989')
@@ -78,7 +84,7 @@ describe('client', function() {
       });
     });
 
-    it('sets the API Version', () => {
+    it('sets the API Version', function() {
       let c = client('sk-XXX', { apiVersion: '2017-01-01' }).orders;
       let orderId = 'btnorder-XXX';
       this.scope = nock('https://api.usebutton.com', {

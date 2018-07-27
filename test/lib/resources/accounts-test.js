@@ -15,7 +15,7 @@ describe('lib/resources/accounts', function() {
   });
 
   describe('#all', function() {
-    beforeEach(() => {
+    beforeEach(function() {
       this.accounts = [{ 'id': 'acc-1' }];
       
       this.scope = nock('https://api.usebutton.com:443')
@@ -23,9 +23,11 @@ describe('lib/resources/accounts', function() {
         .reply(200, { meta: { status: 'ok' }, 'objects': this.accounts });
     });
 
-    afterEach(() => this.scope.done());
+    afterEach(function() {
+      this.scope.done();
+    });
 
-    it('gets a list of accounts with a promise', () => {
+    it('gets a list of accounts with a promise', function() {
       return client.all().then((result) => {
         expect(result.data).to.eql(this.accounts);
       });
@@ -34,7 +36,7 @@ describe('lib/resources/accounts', function() {
   });
 
   describe('#transactions', function() {
-    beforeEach(() => {
+    beforeEach(function() {
       this.accountId = 'acc-1';
       this.transactions = [
         { id: 'tx-1' },
@@ -42,9 +44,11 @@ describe('lib/resources/accounts', function() {
       ];
     });
 
-    afterEach(() => this.scope.done());
+    afterEach(function() {
+      this.scope.done();
+    });
 
-    it('gets a list of transactions with a promise', () => {
+    it('gets a list of transactions with a promise', function() {
       this.scope = nock('https://api.usebutton.com:443')
         .get('/v1/affiliation/accounts/' + this.accountId + '/transactions')
         .reply(200, { meta: { status: 'ok' }, 'objects': this.transactions });
@@ -54,7 +58,7 @@ describe('lib/resources/accounts', function() {
       });
     });
 
-    it('accepts an options object', () => {
+    it('accepts an options object', function() {
       this.scope = nock('https://api.usebutton.com:443')
         .get('/v1/affiliation/accounts/' + this.accountId + '/transactions?cursor=cursor&start=2015-01-01T00%3A00%3A00Z&end=2016-01-01T00%3A00%3A00Z')
         .reply(200, { meta: { status: 'ok' }, 'objects': this.transactions });
@@ -68,7 +72,7 @@ describe('lib/resources/accounts', function() {
       });
     });
 
-    it('only includes passed options', () => {
+    it('only includes passed options', function() {
       this.scope = nock('https://api.usebutton.com:443')
         .get('/v1/affiliation/accounts/' + this.accountId + '/transactions?cursor=cursor')
         .reply(200, { meta: { status: 'ok' }, 'objects': this.transactions });

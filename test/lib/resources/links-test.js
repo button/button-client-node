@@ -14,8 +14,8 @@ describe('lib/resources/links', function() {
     nock.enableNetConnect();
   });
 
-  describe('#create', () => {
-    beforeEach(() => {
+  describe('#create', function() {
+    beforeEach(function() {
       this.url = 'https://www.jet.com/';
       this.experience = {
         btn_pub_ref: 'my-pub-ref',
@@ -40,9 +40,11 @@ describe('lib/resources/links', function() {
         .reply(200, { meta: { status: 'ok' }, 'object': this.link });
     });
 
-    afterEach(() => this.scope.done());
+    afterEach(function() {
+      this.scope.done();
+    });
 
-    it('creates a link with a promise', () => {
+    it('creates a link with a promise', function() {
       return client.create(this.payload).then((result) => {
         expect(result.data).to.eql(this.link);
       });
@@ -50,8 +52,8 @@ describe('lib/resources/links', function() {
 
   });
 
-  describe('#getInfo', () => {
-    beforeEach(() => {
+  describe('#getInfo', function() {
+    beforeEach(function() {
       this.url = 'https://www.jet.com/';
 
       this.payload = {
@@ -82,9 +84,11 @@ describe('lib/resources/links', function() {
         .reply(200, { meta: { status: 'ok' }, 'object': this.link });
     });
 
-    afterEach(() => this.scope.done());
+    afterEach(function() {
+      this.scope.done();
+    });
 
-    it('gets information for a link with a promise', () => {
+    it('gets information for a link with a promise', function() {
       return client.getInfo(this.payload).then((result) => {
         expect(result.data).to.eql(this.link);
       });

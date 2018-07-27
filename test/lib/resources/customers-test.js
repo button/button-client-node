@@ -15,7 +15,7 @@ describe('lib/resources/customers', function() {
   });
 
   describe('#get', function() {
-    beforeEach(() => {
+    beforeEach(function() {
       this.customerId = 'customer-XXX';
       this.customer = { 'customer_id': 'customer-XXX' };
       this.scope = nock('https://api.usebutton.com:443')
@@ -23,9 +23,11 @@ describe('lib/resources/customers', function() {
         .reply(200, { meta: { status: 'ok' }, 'object': this.customer });
     });
 
-    afterEach(() => this.scope.done());
+    afterEach(function() {
+      this.scope.done();
+    });
 
-    it('gets a customer with a promise', () => {
+    it('gets a customer with a promise', function() {
       return client.get(this.customerId).then((result) => {
         expect(result.data).to.eql(this.customer);
       });
@@ -34,7 +36,7 @@ describe('lib/resources/customers', function() {
   });
 
   describe('#create', function() {
-    beforeEach(() => {
+    beforeEach(function() {
       this.customerId = 'customer-1234';
 
       this.payload = {
@@ -50,9 +52,11 @@ describe('lib/resources/customers', function() {
         .reply(200, { meta: { status: 'ok' }, 'object': this.customer });
     });
 
-    afterEach(() => this.scope.done());
+    afterEach(function() {
+      this.scope.done();
+    });
 
-    it('creates a customer with a promise', () => {
+    it('creates a customer with a promise', function() {
       return client.create(this.payload).then((result) => {
         expect(result.data).to.eql(this.customer);
       });
