@@ -53,7 +53,7 @@ describe('lib/resources/customers', function() {
     afterEach(() => this.scope.done());
 
     it('creates a customer with a promise', () => {
-      client.create(this.payload).then((result) => {
+      return client.create(this.payload).then((result) => {
         expect(result.data).to.eql(this.customer);
       });
     });
