@@ -1,6 +1,8 @@
 Current Version
   - Update readme and tests for orders with `purchase_date`
-  -
+  - Drop support for Node < v6 and provide Support for Node v6, v8, v10
+  - Remove callback and custom non-native promise support and use only native Promises
+  - Update readme and tests for native-promise-only implementation
 
 2.8.0 December 5, 2017
   - Add Links API
