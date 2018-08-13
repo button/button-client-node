@@ -1,8 +1,7 @@
 'use strict';
 
-var expect = require('expect.js');
-
-var formatQuery = require('lib').formatQuery;
+const expect = require('expect.js');
+const formatQuery = require('lib').formatQuery;
 
 describe('lib/#formatQuery', function() {
 

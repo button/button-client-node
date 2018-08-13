@@ -1,14 +1,13 @@
-var resources = require('./lib').resources;
-var maybePromise = require('./lib').maybePromise;
-var request = require('./lib').request;
-var merge = require('./lib').merge;
-var compact = require('./lib').compact;
-var utils = require('./lib').utils;
-var version = require('./package.json').version;
+const resources = require('./lib').resources;
+const request = require('./lib').request;
+const merge = require('./lib').merge;
+const compact = require('./lib').compact;
+const utils = require('./lib').utils;
+const version = require('./package.json').version;
 
 module.exports = client;
 
-var configDefaults = {
+const configDefaults = {
   secure: true,
   timeout: false
 };
@@ -35,7 +34,6 @@ function client(apiKey, config) {
   // @param {number=} config.port defaults to 443 if config.secure else 80
   // @param {bool=} config.secure will use HTTPS if true and HTTP if false
   // @param {number=} config.timeout a timeout in ms to abort API calls
-  // @param {Func=} config.promise a function which should return a promise
   // @param {string=} config.apiVersion a string pinning your API version for
   //   the request (YYYY-MM-DD)
   // @returns {Object} a client
@@ -46,7 +44,7 @@ function client(apiKey, config) {
 
   config = merge(configDefaults, config);
 
-  var requestConfig = merge({
+  const requestConfig = merge({
     hostname: 'api.usebutton.com',
     port: config.secure ? 443 : 80
   }, compact({
@@ -54,22 +52,18 @@ function client(apiKey, config) {
     port: config.port
   }));
 
-  var requestOptions = merge(requestConfig, {
+  const requestOptions = merge(requestConfig, {
     auth: apiKey + ':',
     headers: headers(config.apiVersion)
   });
 
-  var maybePromiseRequest = maybePromise(
-    request(config.timeout, config.secure),
-    config.promise
-  );
-
+  const requestPromise = request(config.timeout, config.secure);
   return {
-    accounts: resources.accounts(requestOptions, maybePromiseRequest),
-    customers: resources.customers(requestOptions, maybePromiseRequest),
-    links: resources.links(requestOptions, maybePromiseRequest),
-    merchants: resources.merchants(requestOptions, maybePromiseRequest),
-    orders: resources.orders(requestOptions, maybePromiseRequest)
+    accounts: resources.accounts(requestOptions, requestPromise),
+    customers: resources.customers(requestOptions, requestPromise),
+    links: resources.links(requestOptions, requestPromise),
+    merchants: resources.merchants(requestOptions, requestPromise),
+    orders: resources.orders(requestOptions, requestPromise)
   };
 }
 

@@ -1,22 +1,13 @@
 'use strict';
 
-var expect = require('expect.js');
-var nock = require('nock');
-var Q = require('q');
-
-var client = require('../../../index');
+const expect = require('expect.js');
+const client = require('../../../index')('sk-XXX').links;
+let nock = require('nock');
 
 describe('lib/resources/links', function() {
 
   before(function() {
     nock.disableNetConnect();
-
-    var config = {
-      promise: function(resolver) { return Q.Promise(resolver); }
-    };
-
-    this.callbackClient = client('sk-XXX').links;
-    this.promiseClient = client('sk-XXX', config).links;
   });
 
   after(function() {
@@ -24,7 +15,6 @@ describe('lib/resources/links', function() {
   });
 
   describe('#create', function() {
-
     beforeEach(function() {
       this.url = 'https://www.jet.com/';
       this.experience = {
@@ -50,27 +40,16 @@ describe('lib/resources/links', function() {
         .reply(200, { meta: { status: 'ok' }, 'object': this.link });
     });
 
-    it('creates a link with a callback', function(done) {
-      this.callbackClient.create(this.payload, function(err, res) {
-        expect(err).to.be(null);
-        expect(res.data).to.eql(this.link);
-        this.scope.done();
-        done();
-      }.bind(this));
-    });
-
-    it('creates a link with a promise', function(done) {
-      this.promiseClient.create(this.payload).then(function(result) {
+    it('creates a link with a promise', function() {
+      return client.create(this.payload).then((result) => {
         expect(result.data).to.eql(this.link);
         this.scope.done();
-        done();
-      }.bind(this)).catch(done);
+      });
     });
 
   });
 
   describe('#getInfo', function() {
-
     beforeEach(function() {
       this.url = 'https://www.jet.com/';
 
@@ -102,21 +81,11 @@ describe('lib/resources/links', function() {
         .reply(200, { meta: { status: 'ok' }, 'object': this.link });
     });
 
-    it('gets information for a link with a callback', function(done) {
-      this.callbackClient.getInfo(this.payload, function(err, res) {
-        expect(err).to.be(null);
-        expect(res.data).to.eql(this.link);
-        this.scope.done();
-        done();
-      }.bind(this));
-    });
-
-    it('gets information for a link with a promise', function(done) {
-      this.promiseClient.getInfo(this.payload).then(function(result) {
+    it('gets information for a link with a promise', function() {
+      return client.getInfo(this.payload).then((result) => {
         expect(result.data).to.eql(this.link);
         this.scope.done();
-        done();
-      }.bind(this)).catch(done);
+      });
     });
 
   });

@@ -1,8 +1,7 @@
 'use strict';
 
-var expect = require('expect.js');
-
-var merge = require('lib').merge;
+const expect = require('expect.js');
+const merge = require('lib').merge;
 
 describe('lib/#merge', function() {
 

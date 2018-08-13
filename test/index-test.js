@@ -1,16 +1,13 @@
 'use strict';
 
-var expect = require('expect.js');
-var nock = require('nock');
-
-var client = require('../index');
+const expect = require('expect.js');
+const nock = require('nock');
+const client = require('../index');
 
 describe('client', function() {
 
   it('throws if no API key is supplied', function() {
-    expect(function() {
-      client();
-    }).to.throwError();
+    expect(() => client()).to.throwError();
   });
 
   it('returns a client if an API key is provided', function() {
@@ -34,78 +31,73 @@ describe('client', function() {
       nock.enableNetConnect();
     });
 
-    it('defaults config options', function(done) {
-      var c = client('sk-XXX').orders;
-      var orderId = 'btnorder-XXX';
-      var scope = nock('https://api.usebutton.com:443', {
+    it('defaults config options', function() {
+      let c = client('sk-XXX').orders;
+      let orderId = 'btnorder-XXX';
+      this.scope = nock('https://api.usebutton.com:443', {
         badheaders: ['x-button-api-version']
       }).get('/v1/order/' + orderId)
         .reply(200, { meta: { status: 'ok' }, 'object': {} });
 
-      c.get(orderId, function(err) {
-        expect(err).to.be(null);
-        scope.done();
-        done();
-      }.bind(this));
+      return c.get(orderId).then((results) => {
+        expect(results.data).to.eql({});
+        this.scope.done();
+      });
     });
 
-    it('makes insecure requests', function(done) {
-      var c = client('sk-XXX', { secure: false }).orders;
-      var orderId = 'btnorder-XXX';
-      var scope = nock('http://api.usebutton.com:80')
+    it('makes insecure requests', function() {
+      let c = client('sk-XXX', { secure: false }).orders;
+      let orderId = 'btnorder-XXX';
+      this.scope = nock('http://api.usebutton.com:80')
         .get('/v1/order/' + orderId)
         .reply(200, { meta: { status: 'ok' }, 'object': {} });
 
-      c.get(orderId, function(err) {
-        expect(err).to.be(null);
-        scope.done();
-        done();
-      }.bind(this));
+      return c.get(orderId).then((results) => {
+        expect(results.data).to.eql({});
+        this.scope.done();
+      });
     });
 
-    it('overrides the hostname', function(done) {
-      var c = client('sk-XXX', { hostname: 'staging.usebutton.com' }).orders;
-      var orderId = 'btnorder-XXX';
-      var scope = nock('https://staging.usebutton.com:443')
+    it('overrides the hostname', function() {
+      let c = client('sk-XXX', { hostname: 'staging.usebutton.com' }).orders;
+      let orderId = 'btnorder-XXX';
+      this.scope = nock('https://staging.usebutton.com:443')
         .get('/v1/order/' + orderId)
         .reply(200, { meta: { status: 'ok' }, 'object': {} });
 
-      c.get(orderId, function(err) {
-        expect(err).to.be(null);
-        scope.done();
-        done();
-      }.bind(this));
+      return c.get(orderId).then((results) => {
+        expect(results.data).to.eql({});
+        this.scope.done();
+      });
     });
 
-    it('overrides the port', function(done) {
-      var c = client('sk-XXX', { port: 1989 }).orders;
-      var orderId = 'btnorder-XXX';
-      var scope = nock('https://api.usebutton.com:1989')
+    it('overrides the port', function() {
+      let c = client('sk-XXX', { port: 1989 }).orders;
+      let orderId = 'btnorder-XXX';
+      this.scope = nock('https://api.usebutton.com:1989')
         .get('/v1/order/' + orderId)
         .reply(200, { meta: { status: 'ok' }, 'object': {} });
 
-      c.get(orderId, function(err) {
-        expect(err).to.be(null);
-        scope.done();
-        done();
-      }.bind(this));
+      return c.get(orderId).then((results) => {
+        expect(results.data).to.eql({});
+        this.scope.done();
+      });
     });
 
-    it('sets the API Version', function(done) {
-      var c = client('sk-XXX', { apiVersion: '2017-01-01' }).orders;
-      var orderId = 'btnorder-XXX';
-      var scope = nock('https://api.usebutton.com', {
+    it('sets the API Version', function() {
+      let c = client('sk-XXX', { apiVersion: '2017-01-01' }).orders;
+      let orderId = 'btnorder-XXX';
+      this.scope = nock('https://api.usebutton.com', {
         reqheaders: {
           'x-button-api-version': '2017-01-01'
         }
       }).get('/v1/order/' + orderId)
         .reply(200, { meta: { status: 'ok' }, 'object': {} });
 
-      c.get(orderId, function(err) {
-        expect(err).to.be(null);
-        scope.done();
-        done();
-      }.bind(this));
+      return c.get(orderId).then((results) => {
+        expect(results.data).to.eql({});
+        this.scope.done();
+      });
     });
 
   });

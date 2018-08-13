@@ -1,8 +1,7 @@
 'use strict';
 
-var expect = require('expect.js');
-
-var compact = require('lib').compact;
+const expect = require('expect.js');
+const compact = require('lib').compact;
 
 describe('lib/#compact', function() {
 

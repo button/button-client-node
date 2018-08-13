@@ -1,9 +1,8 @@
 'use strict';
 
-var expect = require('expect.js');
-var nock = require('nock');
-
-var request = require('lib').request;
+const expect = require('expect.js');
+const nock = require('nock');
+const request = require('lib').request;
 
 function errorResponse(message) {
   return {
@@ -23,8 +22,11 @@ function successResponse(obj) {
   };
 }
 
-describe('lib/#request', function() {
+function unexpectedResolve() {
+  return Promise.reject(new Error('Expected promise to reject.'));
+}
 
+describe('lib/#request', function() {
   before(function() {
     nock.disableNetConnect();
   });
@@ -34,359 +36,329 @@ describe('lib/#request', function() {
   });
 
   beforeEach(function() {
-    this.request = request(false, true);
+    this.requestPromise = request(false, true);
   });
 
-  it('makes a basic GET request', function(done) {
-    var payload = { a: 2 };
-    var contentType = 'application/json';
-    var path = '/bleep/bloop';
-    var hostname = 'api.usebutton.com';
-    var user = 'sk-XXX';
+  it('makes a basic GET request', function() {
+    const payload = { a: 2 };
+    const contentType = 'application/json';
+    const path = '/bleep/bloop';
+    const hostname = 'api.usebutton.com';
+    const user = 'sk-XXX';
 
-    var scope = nock('https://' + hostname + ':443', { reqheaders: { 'content-type': contentType } })
+    this.scope = nock('https://' + hostname + ':443', { reqheaders: { 'content-type': contentType } })
       .get(path)
       .basicAuth({ user: user, pass: '' })
       .reply(200, successResponse(payload));
 
-    this.request({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname,
       auth: user + ':',
       headers: { 'Content-Type': contentType }
-    }, function(err, res) {
-      expect(err).to.be(null);
+    }).then((res) => {
       expect(res.data).to.eql(payload);
       expect(res.meta).to.eql({ next: '1:', previous: '3:' });
-      scope.done();
-      done();
+      this.scope.done();
     });
   });
 
-  it('makes a POST request', function(done) {
-    var postData = { b: 3 };
-    var payload = { a: 2 };
-    var contentType = 'application/json';
-    var path = '/bleep/bloop';
-    var hostname = 'api.usebutton.com';
-    var user = 'sk-XXX';
+  it('makes a POST request', function() {
+    const postData = { b: 3 };
+    const payload = { a: 2 };
+    const contentType = 'application/json';
+    const path = '/bleep/bloop';
+    const hostname = 'api.usebutton.com';
+    const user = 'sk-XXX';
 
-    var scope = nock('https://' + hostname + ':443', { reqheaders: { 'content-type': contentType } })
+    this.scope = nock('https://' + hostname + ':443', { reqheaders: { 'content-type': contentType } })
       .post(path, postData)
       .basicAuth({ user: user, pass: '' })
       .reply(200, successResponse(payload));
 
-    this.request({
+    return this.requestPromise({
       method: 'POST',
       path: path,
       hostname: hostname,
       auth: user + ':',
       headers: { 'Content-Type': contentType }
-    }, postData, function(err, res) {
-      expect(err).to.be(null);
+    }, postData).then((res) => {
       expect(res.data).to.eql(payload);
-      scope.done();
-      done();
+      this.scope.done();
     });
   });
 
-  it('makes a DELETE request', function(done) {
-    var payload = null;
-    var contentType = 'application/json';
-    var path = '/bleep/bloop';
-    var hostname = 'api.usebutton.com';
-    var user = 'sk-XXX';
+  it('makes a DELETE request', function() {
+    const payload = null;
+    const contentType = 'application/json';
+    const path = '/bleep/bloop';
+    const hostname = 'api.usebutton.com';
+    const user = 'sk-XXX';
 
-    var scope = nock('https://' + hostname + ':443', { reqheaders: { 'content-type': contentType } })
+    this.scope = nock('https://' + hostname + ':443', { reqheaders: { 'content-type': contentType } })
       .delete(path)
       .basicAuth({ user: user, pass: '' })
       .reply(200, successResponse(payload));
 
-    this.request({
+    return this.requestPromise({
       method: 'DELETE',
       path: path,
       hostname: hostname,
       auth: user + ':',
       headers: { 'Content-Type': contentType }
-    }, function(err, res) {
-      expect(err).to.be(null);
+    }).then((res) => {
       expect(res.data).to.eql(payload);
-      scope.done();
-      done();
+      this.scope.done();
     });
   });
 
 
-  it('handles server defined errors', function(done) {
-    var error = 'bloop';
-    var path = '/bleep/bloop';
-    var hostname = 'api.usebutton.com';
+  it('handles server defined errors', function() {
+    const error = 'bloop';
+    const path = '/bleep/bloop';
+    const hostname = 'api.usebutton.com';
 
-    var scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
       .reply(404, errorResponse(error));
 
-    this.request({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname
-    }, function(err, res) {
-      expect(err.message).to.be(error);
-      expect(err.response).to.be.ok();
-      expect(err.response.statusCode).to.eql(404);
-      expect(res).to.eql(null);
-      scope.done();
-      done();
+    }).then(unexpectedResolve, (err) => {
+      expect(err.message).to.equal(error);
+      expect(err.response).to.be.an('object');
+      expect(err.response.statusCode).to.equal(404);
+      this.scope.done();
     });
   });
 
-  it('handles unexpected errors', function(done) {
-    var error = 'bloop';
-    var path = '/bleep/bloop';
-    var hostname = 'api.usebutton.com';
+  it('handles unexpected errors', function() {
+    const error = 'bloop';
+    const path = '/bleep/bloop';
+    const hostname = 'api.usebutton.com';
 
-    var scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
       .replyWithError(error);
 
-    this.request({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname
-    }, function(err, res) {
-      expect(err.message).to.be(error);
-      expect(err.response).to.not.be.ok();
-      expect(res).to.eql(null);
-      scope.done();
-      done();
+    }).then(unexpectedResolve, (err) => {
+      expect(err.message).to.equal(error);
+      expect(err.response).to.be.an('undefined');
+      this.scope.done();
     });
   });
 
-  it('handles timeout errors', function(done) {
-    var timeoutRequest = request(10, true);
-    var path = '/bleep/bloop';
-    var hostname = 'api.usebutton.com';
+  it('handles timeout errors', function() {
+    const timeoutRequest = request(10, true);
+    const path = '/bleep/bloop';
+    const hostname = 'api.usebutton.com';
 
-    var scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
-      .socketDelay(100)
+      .socketDelay(10000)
       .reply(200, successResponse({}));
 
-    timeoutRequest({
+    return timeoutRequest({
       method: 'GET',
       path: path,
       hostname: hostname
-    }, function(err, res) {
-      expect(err.message).to.be('Request timed out');
-      expect(err.response).to.not.be.ok();
-      expect(res).to.eql(null);
-      scope.done();
-      done();
+    }).then(unexpectedResolve, (err) => {
+      expect(err.message).to.equal('Request timed out');
+      expect(err.response).to.be.an('undefined');
+      this.scope.done();
     });
   });
 
-  it('succeeds if faster than the timeout', function(done) {
-    var payload = {};
-    var timeoutRequest = request(1000, true);
-    var path = '/bleep/bloop';
-    var hostname = 'api.usebutton.com';
+  it('succeeds if faster than the timeout', function() {
+    const payload = {};
+    const timeoutRequest = request(1000, true);
+    const path = '/bleep/bloop';
+    const hostname = 'api.usebutton.com';
 
-    var scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
       .socketDelay(100)
       .reply(200, successResponse(payload));
 
-    timeoutRequest({
+    return timeoutRequest({
       method: 'GET',
       path: path,
       hostname: hostname
-    }, function(err, res) {
-      expect(err).to.be(null);
+    }).then((res) => {
       expect(res.data).to.eql(payload);
-      scope.done();
-      done();
+      this.scope.done();
     });
   });
 
-  it('handles invalid JSON errors', function(done) {
-    var path = '/bleep/bloop';
-    var hostname = 'api.usebutton.com';
+  it('handles invalid JSON errors', function() {
+    const path = '/bleep/bloop';
+    const hostname = 'api.usebutton.com';
 
-    var scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
       .reply(200, 'not json');
 
-    this.request({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname
-    }, function(err, res) {
-      expect(err.message).to.be('Error parsing response as JSON: not json');
-      expect(err.response).to.be.ok();
-      expect(err.response.statusCode).to.eql(200);
-      expect(res).to.eql(null);
-      scope.done();
-      done();
+    }).then(unexpectedResolve, (err) => {
+      expect(err.message).to.equal('Error parsing response as JSON: not json');
+      expect(err.response).to.be.an('object');
+      expect(err.response.statusCode).to.equal(200);
+      this.scope.done();
     });
   });
 
-  it('handles empty responses', function(done) {
-    var path = '/bleep/bloop';
-    var hostname = 'api.usebutton.com';
+  it('handles empty responses', function() {
+    const path = '/bleep/bloop';
+    const hostname = 'api.usebutton.com';
 
-    var scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
       .reply(200, '');
 
-    this.request({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname
-    }, function(err, res) {
-      expect(err.message).to.be('Client received an empty response from the server');
-      expect(err.response).to.be.ok();
-      expect(err.response.statusCode).to.eql(200);
-      expect(res).to.eql(null);
-      scope.done();
-      done();
+    }).then(unexpectedResolve, (err) => {
+      expect(err.message).to.equal('Client received an empty response from the server');
+      expect(err.response).to.be.an('object');
+      expect(err.response.statusCode).to.equal(200);
+      this.scope.done();
     });
   });
 
-  it('handles unknown statuses', function(done) {
-    var path = '/bleep/bloop';
-    var hostname = 'api.usebutton.com';
+  it('handles unknown statuses', function() {
+    const path = '/bleep/bloop';
+    const hostname = 'api.usebutton.com';
 
-    var scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
       .reply(200, { meta: { status: '???' } });
 
-    this.request({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname
-    }, function(err, res) {
-      expect(err.message).to.be('Unknown status: ???');
-      expect(err.response).to.be.ok();
-      expect(err.response.statusCode).to.eql(200);
-      expect(res).to.eql(null);
-      scope.done();
-      done();
+    }).then(unexpectedResolve, (err) => {
+      expect(err.message).to.equal('Unknown status: ???');
+      expect(err.response).to.be.an('object');
+      expect(err.response.statusCode).to.equal(200);
+      this.scope.done();
     });
   });
 
-  it('handles unknown statuses', function(done) {
-    var path = '/bleep/bloop';
-    var hostname = 'api.usebutton.com';
+  it('handles unknown statuses', function() {
+    const path = '/bleep/bloop';
+    const hostname = 'api.usebutton.com';
 
-    var scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
       .reply(200, { meta: { status: '???' } });
 
-    this.request({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname
-    }, function(err, res) {
-      expect(err.message).to.be('Unknown status: ???');
-      expect(err.response).to.be.ok();
-      expect(err.response.statusCode).to.eql(200);
-      expect(res).to.eql(null);
-      scope.done();
-      done();
+    }).then(unexpectedResolve, (err) => {
+      expect(err.message).to.equal('Unknown status: ???');
+      expect(err.response).to.be.an('object');
+      expect(err.response.statusCode).to.equal(200);
+      this.scope.done();
     });
   });
 
-  it('handles response payloads without meta', function(done) {
-    var path = '/bleep/bloop';
-    var hostname = 'api.usebutton.com';
+  it('handles response payloads without meta', function() {
+    const path = '/bleep/bloop';
+    const hostname = 'api.usebutton.com';
 
-    var scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
       .reply(200, {});
 
-    this.request({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname
-    }, function(err, res) {
-      expect(err.message).to.be('Invalid response: {}');
-      expect(err.response).to.be.ok();
-      expect(err.response.statusCode).to.eql(200);
-      expect(res).to.eql(null);
-      scope.done();
-      done();
+    }).then(unexpectedResolve, (err) => {
+      expect(err.message).to.equal('Invalid response: {}');
+      expect(err.response).to.be.an('object');
+      expect(err.response.statusCode).to.equal(200);
+      this.scope.done();
     });
   });
 
-  it('handles response payloads with an invalid meta', function(done) {
-    var path = '/bleep/bloop';
-    var hostname = 'api.usebutton.com';
+  it('handles response payloads with an invalid meta', function() {
+    const path = '/bleep/bloop';
+    const hostname = 'api.usebutton.com';
 
-    var scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
       .reply(200, { meta: 'wat' });
 
-    this.request({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname
-    }, function(err, res) {
-      expect(err.message).to.be('Invalid response: {"meta":"wat"}');
-      expect(err.response).to.be.ok();
-      expect(err.response.statusCode).to.eql(200);
-      expect(res).to.eql(null);
-      scope.done();
-      done();
+    }).then(unexpectedResolve, (err) => {
+      expect(err.message).to.equal('Invalid response: {"meta":"wat"}');
+      expect(err.response).to.be.an('object');
+      expect(err.response.statusCode).to.equal(200);
+      this.scope.done();
     });
   });
 
-  it('handles response payloads without an error', function(done) {
-    var path = '/bleep/bloop';
-    var hostname = 'api.usebutton.com';
+  it('handles response payloads without an error', function() {
+    const path = '/bleep/bloop';
+    const hostname = 'api.usebutton.com';
 
-    var scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
       .reply(200, { meta: { status: 'error' } });
 
-    this.request({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname
-    }, function(err, res) {
-      expect(err.message).to.be('Invalid response: {"meta":{"status":"error"}}');
-      expect(err.response).to.be.ok();
-      expect(err.response.statusCode).to.eql(200);
-      expect(res).to.eql(null);
-      scope.done();
-      done();
+    }).then(unexpectedResolve, (err) => {
+      expect(err.message).to.equal('Invalid response: {"meta":{"status":"error"}}');
+      expect(err.response).to.be.an('object');
+      expect(err.response.statusCode).to.equal(200);
+      this.scope.done();
     });
   });
 
-  it('handles response payloads with an invalid error', function(done) {
-    var path = '/bleep/bloop';
-    var hostname = 'api.usebutton.com';
+  it('handles response payloads with an invalid error', function() {
+    const path = '/bleep/bloop';
+    const hostname = 'api.usebutton.com';
 
-    var scope = nock('https://' + hostname + ':443')
+    this.scope = nock('https://' + hostname + ':443')
       .get(path)
       .reply(200, { meta: { status: 'error' }, error: 'wat' });
 
-    this.request({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname
-    }, function(err, res) {
-      expect(err.message).to.be('Invalid response: {"meta":{"status":"error"},"error":"wat"}');
-      expect(err.response).to.be.ok();
-      expect(err.response.statusCode).to.eql(200);
-      expect(res).to.eql(null);
-      scope.done();
-      done();
+    }).then(unexpectedResolve, (err) => {
+      expect(err.message).to.equal('Invalid response: {"meta":{"status":"error"},"error":"wat"}');
+      expect(err.response).to.be.an('object');
+      expect(err.response.statusCode).to.equal(200);
+      this.scope.done();
     });
   });
 
-  it('handles invalid next / previous meta attributes', function(done) {
-    var payload = {
+  it('handles invalid next / previous meta attributes', function() {
+    const payload = {
       meta: {
         status: 'ok',
         next: 'https://api.usebutton.com/api/3',
@@ -394,49 +366,45 @@ describe('lib/#request', function() {
       }
     };
 
-    var contentType = 'application/json';
-    var path = '/bleep/bloop';
-    var hostname = 'api.usebutton.com';
-    var user = 'sk-XXX';
+    const contentType = 'application/json';
+    const path = '/bleep/bloop';
+    const hostname = 'api.usebutton.com';
+    const user = 'sk-XXX';
 
-    var scope = nock('https://' + hostname + ':443', { reqheaders: { 'content-type': contentType } })
+    this.scope = nock('https://' + hostname + ':443', { reqheaders: { 'content-type': contentType } })
       .get(path)
       .basicAuth({ user: user, pass: '' })
       .reply(200, payload);
 
-    this.request({
+    return this.requestPromise({
       method: 'GET',
       path: path,
       hostname: hostname,
       auth: user + ':',
       headers: { 'Content-Type': contentType }
-    }, function(err, res) {
-      expect(err).to.be(null);
-      expect(res.data).to.eql(undefined);
+    }).then((res) => {
+      expect(res.data).to.equal(undefined);
       expect(res.meta).to.eql({ next: null, previous: null });
-      scope.done();
-      done();
+      this.scope.done();
     });
   });
 
-  it('makes insecure requests', function(done) {
-    var insecureRequest = request(false, false);
-    var path = '/bleep/bloop';
-    var hostname = 'api.usebutton.com';
+  it('makes insecure requests', function() {
+    const insecureRequest = request(false, false);
+    const path = '/bleep/bloop';
+    const hostname = 'api.usebutton.com';
 
-    var scope = nock('http://' + hostname + ':80')
+    this.scope = nock('http://' + hostname + ':80')
       .get(path)
       .reply(200, successResponse({}));
 
-    insecureRequest({
+    return insecureRequest({
       method: 'GET',
       path: path,
       hostname: hostname
-    }, function(err, res) {
-      expect(err).to.be(null);
+    }).then((res) => {
       expect(res.data).to.eql({});
-      scope.done();
-      done();
+      this.scope.done();
     });
   });
 
