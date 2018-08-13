@@ -162,7 +162,7 @@ describe('lib/#request', function() {
 
     this.scope = nock('https://' + hostname + ':443')
       .get(path)
-      .delayConnection(100)
+      .socketDelay(10000)
       .reply(200, successResponse({}));
 
     return timeoutRequest({
