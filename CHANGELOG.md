@@ -4,6 +4,9 @@ Current Version
   - Remove callback and custom non-native promise support and use only native Promises
   - Update readme and tests for native-promise-only implementation
 
+2.9.0 March 29, 2019
+  - Add Rates API
+
 2.8.0 December 5, 2017
   - Add Links API
 

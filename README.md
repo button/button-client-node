@@ -274,6 +274,16 @@ client.links.getInfo({ url: "https://www.jet.com" })
   .catch(handleError);
 ```
 
+##### Get Offers
+
+```javascript
+client.offers.get({
+  user_id: "some-user-id",
+  device_ids: ["123"]
+}).then(handleResult)
+  .catch(handleError);
+```
+
 ## Utils
 
 Utils houses generic helpers useful in a Button Integration.
