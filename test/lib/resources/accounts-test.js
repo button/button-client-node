@@ -2,6 +2,7 @@
 
 const expect = require('expect.js');
 const client = require('../../../index')('sk-XXX').accounts;
+const constants = require('../../../lib/constants');
 let nock = require('nock');
 
 describe('lib/resources/accounts', function() {
@@ -60,7 +61,7 @@ describe('lib/resources/accounts', function() {
         cursor: 'cursor',
         start: '2015-01-01T00:00:00Z',
         end: '2016-01-01T00:00:00Z',
-        time_field: 'modified_date'
+        time_field: constants.TIME_FIELD_MODIFIED
       }).then((result) => {
         expect(result.data).to.eql(this.transactions);
         this.scope.done();
