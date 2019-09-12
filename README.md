@@ -108,6 +108,7 @@ Transactions are a paged resource.  The response object will contain properties 
 * `cursor`: An API cursor to fetch a specific set of results
 * `start`: An ISO-8601 datetime string to filter only transactions after `start`
 * `end`: An ISO-8601 datetime string to filter only transactions before `end`
+* `time_field`: Which time field start and end filter on.
 
 ```javascript
 const client = require('@button/button-client-node')('sk-XXX');
@@ -123,7 +124,8 @@ client.accounts.transactions('acc-1')
 client.accounts.transactions('acc-1', {
   cursor: 'cXw',
   start: '2015-01-01T00:00:00Z',
-  end: '2016-01-01T00:00:00Z'
+  end: '2016-01-01T00:00:00Z',
+  time_field: 'modified_date'
 }).then(handleResult)
   .catch(handleError);
 ```
