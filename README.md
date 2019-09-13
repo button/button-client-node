@@ -285,6 +285,8 @@ Transactions are a paged resource.  The response object will contain properties 
 
 `#all` accepts an optional second parameter, `options` which may define the follow keys to narrow results:
 
+Unlike the accounts.transaction resource, which only queries a single account's transactions, the transactions.all resource queries all of an organizations transactions.
+
 ###### options
 
 * `cursor`: An API cursor to fetch a specific set of results
