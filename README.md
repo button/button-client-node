@@ -84,6 +84,7 @@ We currently expose the following resources to manage:
 * [`Accounts`](#accounts)
 * [`Merchants`](#merchants)
 * [`Orders`](#orders)
+* [`Transactions`](#transactions)
 
 ### Accounts
 
@@ -275,6 +276,44 @@ client.links.getInfo({ url: "https://www.jet.com" })
   .then(handleSuccess)
   .catch(handleError);
 ```
+
+### Transactions
+
+
+##### All
+Transactions are a paged resource.  The response object will contain properties `meta.next` and `meta.previous` which can be supplied to subsequent invocations of `#all` to fetch additional results.
+
+Unlike the accounts.transaction resource, which only queries a single account's transactions, the transactions.all resource queries all of an organizations transactions.
+
+`#all` accepts an optional second parameter, `options` which may define the follow keys to narrow results:
+
+###### options
+
+* `cursor`: An API cursor to fetch a specific set of results
+* `start`: An ISO-8601 datetime string to filter only transactions after `start`
+* `end`: An ISO-8601 datetime string to filter only transactions before `end`
+* `time_field`: Which time field start and end filter on.
+
+```javascript
+const client = require('@button/button-client-node')('sk-XXX');
+
+// without options argument
+//
+client.transactions.all()
+  .then(handleSuccess)
+  .catch(handleError);
+
+// with options argument
+//
+client.transactions.all({
+  cursor: 'cXw',
+  start: '2015-01-01T00:00:00Z',
+  end: '2016-01-01T00:00:00Z',
+  time_field: 'modified_date'
+}).then(handleResult)
+  .catch(handleError);
+```
+
 
 ## Utils
 
